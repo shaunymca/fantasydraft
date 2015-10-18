@@ -16,7 +16,8 @@ var express = require('express'),
   analyze = require('./modules/analyze.js'),
   calculations = require('./modules/calculations.js'),
   annealing = require('./modules/annealing.js'),
-  machine_learning = require('machine_learning');
+  machine_learning = require('machine_learning'),
+  draft = require('./modules/draft.js');
 
 var app = module.exports = express();
 
@@ -24,7 +25,7 @@ var db = mongo.connect();
 //nba.players();
 //db.once('open', function (callback) {
   players = calculations.distribution();
-  annealing.annealing();
+  draft.run();
   //nba.getplayers();
   //nba.test();
   //analyze.players();

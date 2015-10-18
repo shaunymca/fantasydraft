@@ -1,81 +1,23 @@
-# Angular Express Seed
 
-Start an awesome app with AngularJS on the front, Express + Node on the back. This project is an
-application skeleton for a typical [AngularJS](http://angularjs.org/) web app for those who want
-to use Node to serve their app.
+You'll need node.js installed on your box.
+When you have it installed, run `node app.js` to start the app. I don't have gulp installed or anything, but that might be helpful.
 
-The seed contains angular libraries, test libraries and a bunch of scripts all preconfigured for
-instant web development gratification. Just clone the repo (or download the zip/tarball) and
-you're ready to develop your application.
+Development strategy:
+You can build modules in the `./modules` directory. The modules can load other modules. To create functions that can be exported to other modules or the main app, use the syntax below:
 
-The seed app shows how to wire together Angular client-side components with Express on the server.
-It also illustrates writing angular partials/views with the Jade templating library.
+```
+exports.functionName = function() {
+  some code here
+  return something
+};
+```
 
-_Note: Although Jade supports interpolation, you should be doing that mostly on the client. Mixing
-server and browser templating will convolute your app. Instead, use Jade as a syntactic sugar for
-HTML, and let AngularJS take care of interpolation on the browser side._
+You can call these functions in other modules by requiring the module and calling the function like below. If the module was installed by npm, you can just call it by name. If the module was written by us, you'll need to reference it's file path relative to the file you are in. 
 
-## How to use angular-express-seed
+`moduleName.functinName();`
 
-Clone the angular-express-seed repository, run `npm install` to grab the dependencies, and start hacking!
+Modules installed from npm are stored in the node_modules folder.
 
-### Running the app
+Some notes for Alex. When I started this, I decided to scrape a bunch of historical stats and store them in a mongodb. If you want to have the draft data persist, it would be trivial to add in mongo hooks, because it is already integrated. I thought about this, and it might be worthwhile if the server crashes in between rounds or if we want to audit the draft data after the fact.
 
-Runs like a typical express app:
-
-    node app.js
-
-### Running tests
-
-Coming soon!
-
-### Receiving updates from upstream
-
-Just fetch the changes and merge them into your project with git.
-
-
-## Directory Layout
-    
-    app.js              --> app config
-    package.json        --> for npm
-    public/             --> all of the files to be used in on the client side
-      css/              --> css files
-        app.css         --> default stylesheet
-      img/              --> image files
-      js/               --> javascript files
-        app.js          --> declare top-level app module
-        controllers.js  --> application controllers
-        directives.js   --> custom angular directives
-        filters.js      --> custom angular filters
-        services.js     --> custom angular services
-        lib/            --> angular and 3rd party JavaScript libraries
-          angular/
-            angular.js            --> the latest angular js
-            angular.min.js        --> the latest minified angular js
-            angular-*.js          --> angular add-on modules
-            version.txt           --> version number
-    routes/
-      api.js            --> route for serving JSON
-      index.js          --> route for serving HTML pages and partials
-    views/
-      index.jade        --> main page for app
-      layout.jade       --> doctype, title, head boilerplate
-      partials/         --> angular view partials (partial jade templates)
-        partial1.jade
-        partial2.jade
-
-
-
-## Example App
-
-A simple [blog](https://github.com/btford/angular-express-blog) based on this seed.
-
-
-## Contact
-
-For more information on AngularJS please check out http://angularjs.org/
-For more on Express and Jade, http://expressjs.com/ and http://jade-lang.com/ are
-your friends.
-
-## License
-MIT
+Anywho, that can be a stretch goal, and it would be trivial to switch to postgres.
