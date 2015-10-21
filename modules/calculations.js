@@ -1,4 +1,7 @@
-var utilities = require('./utilities.js');
+var utilities = require('./utilities.js'),
+    pgdb = require('./populatedb.js'),
+    Q = require('q');
+
 var stats = {"threePointersMade":"3pt",
               "assists":"apg",
               "blocks":"bpg",
@@ -8,14 +11,26 @@ var stats = {"threePointersMade":"3pt",
               "steals":"spg",
               "turnOvers":"tpg",
               "totalRebounds":"rpg"};
-
-var players = utilities.forcasts();
 var distribution = {};
 
+var players = [];
+exports.getPlayers = function() {
+  return Q.promise(function(resolve) {
+    pgdb.getPlayers()
+    .then(function (output) {
+      players = output;
+      //console.log(players);
+      var playerstats = distributionofPlayers();
+      //console.log('playerstats' + playerstats);
+      resolve(playerstats);
+    });
+  });
+};
 
 //console.log(distribution);
-exports.distribution = function() {
+function distributionofPlayers() {
   Object.keys(stats).forEach(function (statkey) {
+    //console.log('hello');
      distribution[statkey] = [];
      //console.log(statkey);
      players.forEach(function (player) {
@@ -42,22 +57,22 @@ exports.distribution = function() {
   //console.log(players);
   players.forEach(function (player) {
     zarray = [];
-    player.superscore = 0;
+    player.sumzscores = 0;
     for (var key in player.zscores) {
       zarray.push(player.zscores[key]);
-      player.superscore += player.zscores[key];
+      player.sumzscores += player.zscores[key];
       //console.log(zarray);
       player.averagez = average(zarray);
     }
   });
-  return(players);
+  return players;
   //players.forEach(function (player) {
-  //  console.log(player.playername + ',' + player.superscore + ',' + player.averagez);
+  //  console.log(player.playername + ',' + player.sumzscores + ',' + player.averagez);
   //  //if(player.playername == 'Stephen Curry' || player.playername == "Anthony Davi") {
   //  //  console.log(player);
   //  //}
   //});
-};
+}
 
 function keydist(player, statkey) {
   stat = stats[statkey];

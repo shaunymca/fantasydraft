@@ -17,15 +17,15 @@ var express = require('express'),
   calculations = require('./modules/calculations.js'),
   annealing = require('./modules/annealing.js'),
   machine_learning = require('machine_learning'),
-  draft = require('./modules/draft.js');
+  draft = require('./modules/draft.js'),
+  populatedb = require('./modules/populatedb.js');
 
 var app = module.exports = express();
 
-var db = mongo.connect();
+//var db = mongo.connect();
 //nba.players();
 //db.once('open', function (callback) {
-  players = calculations.distribution();
-  draft.run();
+  //draft.run();
   //nba.getplayers();
   //nba.test();
   //analyze.players();
@@ -61,6 +61,25 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname + "/public/js/partials/index.html");
 });
 
+app.get('/players', function(req,res) {
+  calculations.getPlayers()
+  .then(function (output) {
+    //console.log(output);
+    //players = output;
+    res.json(output);
+  });
+});
+
+app.get('/populatePlayers', function(req,res) {
+  populatedb.populatePlayerDB();
+});
+
+app.post('/addPlayer', function(req, res) {
+  populatedb.addPlayer(req.body)
+  .then(function (output) {
+    res.json(output);
+  });
+});
 /**
  * Start Server
  */
