@@ -87,8 +87,9 @@ class Player {
 }
 
 class Team {
-	constructor(identifier) {
+	constructor(identifier, draft_pick) {
 		this.identifier = identifier;
+		this.draft_pick = draft_pick;
 		this.players = {};
 	}
 
@@ -117,6 +118,16 @@ class Team {
 		return res;
 	}
 
+	wins(other_teams, random_numbers) {
+		res = 0;
+		for (var other_team in other_teams) {
+			if (0 < Team.comp(this, other_team)) {
+				res += 1;
+			}
+		}
+		return res;
+	}
+
 	static comp(t1, t2, random_numbers) {
 		res = 0;
 		for (var r in random_numbers) {
@@ -132,5 +143,8 @@ class Team {
 
 class League {
 	constructor() {
+		teams = {};
 	}
+
+	pick_player_for_team(team_identifier, )
 }
