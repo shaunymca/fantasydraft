@@ -22,18 +22,6 @@ var express = require('express'),
 
 var app = module.exports = express();
 
-//var db = mongo.connect();
-//nba.players();
-//db.once('open', function (callback) {
-  //draft.run();
-  //nba.getplayers();
-  //nba.test();
-  //analyze.players();
-//});
-/**
- * Configuration
- */
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 //app.use(bodyParser.urlencoded({ extended: true }));

@@ -14,6 +14,7 @@ var stats = {"threePointersMade":"3pt",
 var distribution = {};
 
 var players = [];
+// Returns a promise. This function grabs players from the db and runs them through the distribution function. Each category has it's own z-score compared to other players and getPlayers returns the final list.
 exports.getPlayers = function() {
   return Q.promise(function(resolve) {
     pgdb.getPlayers()
