@@ -62,6 +62,7 @@ class Score {
 
 var prediction = "prediction";
 var assigned = "assigned";
+// TODO: set prediction level to be integer that way we can blow it away up to a point
 
 class Draft {
 	constructor(level, team_identifier) {
@@ -231,7 +232,7 @@ class League {
 				other_teams.push(this.teams[tid]);
 			}
 		}
-		
+
 		top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
 
 
