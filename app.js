@@ -32,10 +32,12 @@ app.use(methodOverride());
 
 var init_league = function(teams, players) {
   var l = new League();
-  for (var db_t in teams) {
+  for (var j = 0; j < teams.length; j++) {
+    var db_t = teams[j];
     var t = new Team(db_t.id, db_t.name, db_t.draft_pick);
-    l.addTeam(t);
+    l.add_team(t);
   }
+
   for (var i = 0; i < players.length; i++) {
     var db_p = players[i];
     var d;
@@ -447,8 +449,9 @@ class League {
       teams: [],
       players: this.playerpool.pretty_print()
     };
+    var self = this;
     Object.keys(this.teams).forEach(function(t) {
-      res.teams.push(this.teams[t].pretty_print());
+      res.teams.push(self.teams[t].pretty_print());
     });
     return res;
   }
