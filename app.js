@@ -82,7 +82,7 @@ calculations.getPlayers().then(function(output) {
     // I'll rerun the player pick stuff after this so no need to rerun that here.
   });
 
-  app.get('/predictDraft', function(req.res) {
+  app.get('/predictDraft', function(req, res) {
     //this needs to predict the drafts. This might not be neccesary if nextpickforteam will do this automatically and find the player.
   });
 
