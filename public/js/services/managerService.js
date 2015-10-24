@@ -4,7 +4,7 @@
       var managerService;
       managerService = {};
       managerService.leagues = function() {
-        return $http.get(/league).success(function(result)
+        return $http.get('/league').success(function(result)
         {
           console.log(result);
           return result;
