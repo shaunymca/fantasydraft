@@ -36,7 +36,8 @@ var init_league = function(teams, players) {
     var t = new Team(db_t.id, db_t.name, db_t.draft_pick);
     l.addTeam(t);
   }
-  for (var db_p in players) {
+  for (var i = 0; i < players.length; i++) {
+    var db_p = players[i];
     var d;
     if (db_p.drafted_at) {
       d = new Draft(0, db_p.team_identifier, db_p.drafted_at);
@@ -62,8 +63,12 @@ var init_league = function(teams, players) {
 
     if (db_p.team_identifier) {
       l.add_player_to_team(db_p.id, db_p.team_identifier, 0);
+    } else {
+      l.add_player(p);
     }
   }
+
+  return l;
 };
 
 /**
@@ -78,9 +83,7 @@ var init_league = function(teams, players) {
  app.get('/league', function(req,res) {
    calculations.getPlayers().then(function(players) {
      populatedb.getTeams().then(function(teams){
-       var pp = new PlayerPool(players);
-       var l = new League(teams, pp);
-       console.log(l);
+       var l = init_league(teams, players);
        res.json(l);
      });
    });
@@ -93,13 +96,6 @@ var init_league = function(teams, players) {
  app.get('nextpickforteam', function(req,res) {
    // this should get the next pick for the team passed to it from the req.
    // ex  - [team:12]
- });
-
- app.get('/players', function(req,res) {
-   // this gets the current player pool
-   calculations.getPlayers().then(function(output) {
-     res.json(new PlayerPool(output));
-   });
  });
 
  app.get('/populatePlayers', function(req,res) {
@@ -302,29 +298,8 @@ class Player {
 }
 
 class PlayerPool {
-	constructor(players) {
+	constructor() {
 		this.players = {};
-      //console.log(output);
-			for (var i = 0; i < players.length; i++) {
-        var p = players[i];
-        //console.log(p);
-				this.players[p.id] = new Player(
-					p.id,
-					p.games,
-					//totalrebounds, assists, totalrebounds, totalrebounds, points, steals, totalrebounds, totalRebounds, blocks
-					new Score(
-            p.threepointersmade,
-            p.assists,
-            p.blocks,
-            p.fieldgoalpercentage,
-            p.freethrowpercentage,
-            p.points,
-            p.steals,
-            p.turnovers,
-            p.totalrebounds
-          )
-				);
-			}
 	}
 
 	add_player(player) {
@@ -436,6 +411,10 @@ class League {
 	add_team(team) {
 		this.teams[team.identifier] = team;
 	}
+
+  add_player(player) {
+    this.playerpool.add_player(player);
+  }
 
   // I had to change this because it was causing errors. I don't really know what it does. . .
   //__level=assigned
