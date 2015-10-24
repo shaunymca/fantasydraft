@@ -4,8 +4,6 @@ var nba = require('nba'),
     Q = require('q'),
     async = require("async");
 
-
-
 exports.test = function() {
     nba.api.boxScoreScoring({gameId: "0021201081"}, function (err, response) {
         var keys = [];

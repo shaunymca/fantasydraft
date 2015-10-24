@@ -2,7 +2,7 @@
 
 /* Filters */
 
-angular.module('myApp.filters', []).
+angular.module('fantasyDraftApp.filters', []).
   filter('interpolate', function (version) {
     return function (text) {
       return String(text).replace(/\%VERSION\%/mg, version);

@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
+angular.module('fantasyDraftApp.controllers', []).
   controller('AppCtrl', function ($scope, $http) {
 
     $http({
