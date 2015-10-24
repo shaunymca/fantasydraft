@@ -1,7 +1,7 @@
-### For Alex
+### For Alex 2015-10-24
 
-I added some todos in the API section, line 42
-The basics are there, I just need you to add the class initialization for what's needed where.
+I added some todos in the API section (line 42).  
+The basics are there, I just need you to add the class initialization for what's needed where.  
 I don't have a league or Teams table yet in the DB, they would be helpful in case the server crashes, but I can add them, it's a nice to have.
 The ideal would be to have the classes initialize with values from the db. See what I did in line 40 and 41. That was a big breakthrough, getting the data from the db before I initialized the classes.
 
@@ -18,8 +18,11 @@ Currently, these are almost the same, because there are no teams, right. For tes
 Also, you'll need to checkout line 357, this was erroring out because of the assignment in the function initialization. I removed the assignment, but I haven't used the add_player_to_team method yet, so it might be broken.
 
 
+___________________________________
 
 
+
+### setup stuff
 
 
 You'll need node.js installed on your box.
