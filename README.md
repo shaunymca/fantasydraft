@@ -3,7 +3,7 @@
 I added some todos in the API section (line 42).  
 The basics are there, I just need you to add the class initialization for what's needed where.  
 I don't have a league or Teams table yet in the DB, they would be helpful in case the server crashes, but I can add them, it's a nice to have.
-The ideal would be to have the classes initialize with values from the db. See what I did in line 40 and 41. That was a big breakthrough, getting the data from the db before I initialized the classes.
+The ideal would be to have the classes initialize with values from the db. See what I did in line 40 and 41. That was a big breakthrough, getting the data from the db before I initialized the classes. If you want to add to the postgre db, the creds are in /modules/populatedb.js
 
 If you go to
 `localhost:3000/league`
