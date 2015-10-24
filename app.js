@@ -112,8 +112,8 @@ var init_league = function(teams, players) {
  });
 
  app.post('/removePlayer', function(req,res) {
-   //this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
-   // I'll rerun the player pick stuff after this so no need to rerun that here.
+   // TODO this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
+   // TODO I'll rerun the player pick stuff after this so no need to rerun that here.
  });
 
  app.get('/predictDraft', function(req, res) {
