@@ -69,75 +69,6 @@ var init_league = function(teams, players) {
 /**
  * Routes
  */
-var DB_PLAYERS = [];
-calculations.getPlayers().then(function(output) {
-  // Please initialize all of the needed classes here, so we can call them in the api
-  var DB_PLAYERS = output;
-  var league = new League(DB_PLAYERS);
-  var players = new PlayerPool(DB_PLAYERS);
-  // API SECTION
-  app.get('/', function(req, res) {
-    res.sendfile(__dirname + "/public/js/partials/index.html");
-  });
-  // LEAGUE SETTINGS:
-  // Get the league object
-  app.get('/league', function(req,res) {
-    //console.log(players);
-    res.json(league);
-  });
-  // Add team to the league
-  app.post('addteam', function(req,res) {
-    // this should add a team to the database and also to the League class. The req will include the team name, and anything else you need.
-  });
-
-  app.get('predicted_league', function(req, res) {
-    // this will run the prediction class and return the whole leagues predictions
-  });
-
-  app.get('nextpickforteam', function(req,res) {
-    // this should get the next pick for the team passed to it from the req.
-    // ex  - [team:12]
-  });
-
-  app.get('/players', function(req,res) {
-    // this gets the current player pool
-    res.json(players);
-  });
-
-  app.get('/populatePlayers', function(req,res) {
-    // this populates the database table for players. DO NOT RUN UNLESS YOU KNOW WHAT YOU'RE DOING
-    populatedb.populatePlayerDB();
-  });
-
-  app.post('/addPlayer', function(req, res) {
-    //This should add a new player to the db, but it needs to add a player to the playerpool also.
-    populatedb.addPlayer(req.body)
-    .then(function (output) {
-      res.json(output);
-    });
-  });
-
-  app.post('/removePlayer', function(req,res) {
-    //this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
-    // I'll rerun the player pick stuff after this so no need to rerun that here.
-  });
-
-  app.get('/predictDraft', function(req, res) {
-    // TODO: build player pool
-    // TODO: add all players to teams
-    // TODO: create a league
-    // TODO: call predict draft
-    // TODO: return team with players and ordering of draft pick
-  });
-
-  app.get('/bower_components/*', function(req, res) {
-    res.sendfile(__dirname + req.originalUrl);
-  });
-
-  app.get('/public/*', function(req, res) {
-    res.sendfile(__dirname + req.originalUrl);
-  });
-});
  // API SECTION
  app.get('/', function(req, res) {
    res.sendfile(__dirname + "/public/js/partials/index.html");
@@ -149,6 +80,7 @@ calculations.getPlayers().then(function(output) {
      populatedb.getTeams().then(function(teams){
        var pp = new PlayerPool(players);
        var l = new League(teams, pp);
+       console.log(l);
        res.json(l);
      });
    });
@@ -184,8 +116,8 @@ calculations.getPlayers().then(function(output) {
  });
 
  app.post('/removePlayer', function(req,res) {
-   //this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
-   // I'll rerun the player pick stuff after this so no need to rerun that here.
+   // TODO this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
+   // TODO I'll rerun the player pick stuff after this so no need to rerun that here.
  });
 
  app.get('/predictDraft', function(req, res) {

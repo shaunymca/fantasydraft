@@ -3,14 +3,16 @@
     "$http", function($http) {
       var managerService;
       managerService = {};
-      managerService.getPlayers = function() {
-        return $http.get('/players').success(function(result)
+      managerService.leagues = function() {
+        return $http.get(/league).success(function(result)
         {
+          console.log(result);
           return result;
         }).error(function(result) {
           return result;
         });
       };
+      return managerService;
     }
   ]);
 }).call(this);
