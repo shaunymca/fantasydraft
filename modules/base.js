@@ -279,11 +279,3 @@ class League {
 		this.predict_draft_teams();
 	}
 }
-
-
-
-
-
-
-
-
