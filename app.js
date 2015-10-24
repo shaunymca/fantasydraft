@@ -30,6 +30,42 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 //app.use(express.static(__dirname + '/public'));
 
+var init_league = function(teams, players) {
+  var l = new League();
+  for (var db_t in teams) {
+    var t = new Team(db_t.id, db_t.name, db_t.draft_pick);
+    l.addTeam(t);
+  }
+  for (var db_p in players) {
+    var d;
+    if (db_p.drafted_at) {
+      d = new Draft(0, db_p.team_identifier, db_p.drafted_at);
+    }
+
+    var p = new Player(
+      db_p.id,
+      db_p.games,
+      //totalrebounds, assists, totalrebounds, totalrebounds, points, steals, totalrebounds, totalRebounds, blocks
+      new Score(
+        db_p.threepointersmade,
+        db_p.assists,
+        db_p.blocks,
+        db_p.fieldgoalpercentage,
+        db_p.freethrowpercentage,
+        db_p.points,
+        db_p.steals,
+        db_p.turnovers,
+        db_p.totalrebounds
+      ),
+      d
+    );
+
+    if (db_p.team_identifier) {
+      l.add_player_to_team(db_p.id, db_p.team_identifier, 0);
+    }
+  }
+};
+
 /**
  * Routes
  */
@@ -102,6 +138,71 @@ calculations.getPlayers().then(function(output) {
     res.sendfile(__dirname + req.originalUrl);
   });
 });
+ // API SECTION
+ app.get('/', function(req, res) {
+   res.sendfile(__dirname + "/public/js/partials/index.html");
+ });
+ // LEAGUE SETTINGS:
+ // Get the league object
+ app.get('/league', function(req,res) {
+   calculations.getPlayers().then(function(players) {
+     populatedb.getTeams().then(function(teams){
+       var pp = new PlayerPool(players);
+       var l = new League(teams, pp);
+       res.json(l);
+     });
+   });
+ });
+ // Add team to the league
+ app.post('addteam', function(req,res) {
+   // this should add a team to the database and also to the League class. The req will include the team name, and anything else you need.
+ });
+
+ app.get('nextpickforteam', function(req,res) {
+   // this should get the next pick for the team passed to it from the req.
+   // ex  - [team:12]
+ });
+
+ app.get('/players', function(req,res) {
+   // this gets the current player pool
+   calculations.getPlayers().then(function(output) {
+     res.json(new PlayerPool(output));
+   });
+ });
+
+ app.get('/populatePlayers', function(req,res) {
+   // this populates the database table for players. DO NOT RUN UNLESS YOU KNOW WHAT YOU'RE DOING
+   populatedb.populatePlayerDB();
+ });
+
+ app.post('/addPlayer', function(req, res) {
+   //This should add a new player to the db, but it needs to add a player to the playerpool also.
+   populatedb.addPlayer(req.body)
+   .then(function (output) {
+     res.json(output);
+   });
+ });
+
+ app.post('/removePlayer', function(req,res) {
+   //this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
+   // I'll rerun the player pick stuff after this so no need to rerun that here.
+ });
+
+ app.get('/predictDraft', function(req, res) {
+   // TODO: build player pool
+   // TODO: add all players to teams
+   // TODO: create a league
+   // TODO: call predict draft
+   // TODO: return team with players and ordering of draft pick
+ });
+
+ app.get('/bower_components/*', function(req, res) {
+   res.sendfile(__dirname + req.originalUrl);
+ });
+
+ app.get('/public/*', function(req, res) {
+   res.sendfile(__dirname + req.originalUrl);
+ });
 
 /**
  * Start Server
@@ -217,10 +318,14 @@ class Score {
 }
 
 class Draft {
-	constructor(level, team_identifier) {
+	constructor(level, team_identifier, time) {
 		this.level = level;
 		this.team_identifier = team_identifier;
-		this.drafted_at = new Date().getTime();
+    at = time;
+    if (!at) {
+      at = new Date();
+    }
+		this.drafted_at = at;
 	}
 
 	is_prediction(level) {
@@ -229,10 +334,11 @@ class Draft {
 }
 
 class Player {
-	constructor(identifier, games_expected_to_play, score) {
+	constructor(identifier, games_expected_to_play, score, draft) {
 		this.identifier = identifier;
 		this.games_expected_to_play = games_expected_to_play;
 		this.score = score;
+    this.draft = draft;
 	}
 
 	can_draft() {
@@ -305,8 +411,9 @@ class PlayerPool {
 }
 
 class Team {
-	constructor(identifier, draft_pick) {
+	constructor(identifier, name, draft_pick) {
 		this.identifier = identifier;
+    this.name = name;
 		this.draft_pick = draft_pick;
 		this.players = {};
 	}
@@ -389,9 +496,9 @@ var _n_random_numbers = function(n) {
 };
 
 class League {
-	constructor(players) {
+	constructor() {
 		this.teams = {};
-    this.playerpool = new PlayerPool(players);
+    this.playerpool = new PlayerPool();
 	}
 
 	add_team(team) {

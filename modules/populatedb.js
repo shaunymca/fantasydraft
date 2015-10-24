@@ -85,3 +85,51 @@ exports.addPlayer = function(player) {
     });
   });
 };
+
+// Returns a promise that will resolve the full list of players
+exports.getTeams = function() {
+  return Q.promise(function(resolve) {
+    pg.connect(conString, function(err, client, done) {
+      if(err) {
+        return console.error('error fetching client from pool', err);
+      }
+      client.query('SELECT * from teams', function(err, result) {
+        //call `done()` to release the client back to the pool
+        done();
+
+        if(err) {
+          return console.error('error running query', err);
+        }
+        //console.log(result.rows);
+        resolve(result.rows);
+        //output: 1
+      });
+    });
+  });
+};
+
+// Accepts a player object and returns a promise that resolves the player back from the db.
+exports.addTeam = function(team) {
+  return Q.promise(function(resolve) {
+    pg.connect(conString, function(err, client, done) {
+      if(err) {
+        return console.error('error fetching client from pool', err);
+      }
+      client.query((
+        ' INSERT INTO teams' +
+        ' (name)' +
+        '  VALUES ($1)'),
+        [team.name],
+        function(err, result) {
+        done();
+
+        if(err) {
+          return console.error('error running query', err);
+        }
+        //console.log(result.rows);
+        resolve(result.rows[0].id);
+        //output: 1
+      });
+    });
+  });
+};
