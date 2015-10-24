@@ -325,7 +325,7 @@ class Team {
       if (this.players.hasOwnProperty(pid)) {
         var player = this.players[pid];
         if (player.is_prediction(level)) {
-          delete this.players[player];  
+          delete this.players[player];
         }
       }
 		}
