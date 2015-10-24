@@ -2,6 +2,9 @@
   "name": "application-name",
   "version": "0.0.1",
   "private": true,
+  "jshintConfig": {
+    "esnext": true
+  },
   "dependencies": {
     "body-parser": "^1.11.0",
     "error-handler": "^0.1.4",
