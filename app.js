@@ -84,9 +84,8 @@ calculations.getPlayers().then(function(output) {
 
   app.get('/predictDraft', function(req, res) {
     // TODO: build player pool
-    // TODO: create a league
-    // TODO: add all teams to league
     // TODO: add all players to teams
+    // TODO: create a league
     // TODO: call predict draft
     // TODO: return team with players and ordering of draft pick
   });
