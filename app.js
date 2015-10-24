@@ -84,7 +84,7 @@ var init_league = function(teams, players) {
    calculations.getPlayers().then(function(players) {
      populatedb.getTeams().then(function(teams){
        var l = init_league(teams, players);
-       res.json(l);
+       res.json(l.pretty_print());
      });
    });
  });
@@ -117,11 +117,14 @@ var init_league = function(teams, players) {
  });
 
  app.get('/predictDraft', function(req, res) {
-   // TODO: build player pool
-   // TODO: add all players to teams
-   // TODO: create a league
-   // TODO: call predict draft
-   // TODO: return team with players and ordering of draft pick
+   calculations.getPlayers().then(function(players) {
+     populatedb.getTeams().then(function(teams){
+       var l = init_league(teams, players);
+       // TODO: call predict draft
+       // TODO: return team with players and ordering of draft pick
+       res.json(l.pretty_print());
+     });
+   });
  });
 
  app.get('/bower_components/*', function(req, res) {
@@ -269,6 +272,16 @@ class Player {
     this.draft = draft;
 	}
 
+  pretty_print() {
+    var res = {
+      player_id: this.identifier,
+    };
+    if (this.draft) {
+      res.drafted_at = this.draft.drafted_at;
+    }
+    return res;
+  }
+
 	can_draft() {
 		return this.draft !== null;
 	}
@@ -302,6 +315,15 @@ class PlayerPool {
 		this.players = {};
 	}
 
+  pretty_print() {
+    var res = [];
+    var self = this;
+    Object.keys(this.players).forEach(function(p) {
+      res.push(self.players[p].pretty_print());
+    });
+    return res;
+  }
+
 	add_player(player) {
 		this.players[player.identifier] = player;
 	}
@@ -324,6 +346,19 @@ class Team {
 		this.draft_pick = draft_pick;
 		this.players = {};
 	}
+
+  pretty_print() {
+    var res = {
+      team_name: this.name,
+      team_id: this.identifier,
+      players: []
+    };
+    var self = this;
+    Object.keys(this.players).forEach(function(p) {
+      res.players.push(self.players[p].pretty_print());
+    });
+    return res;
+  }
 
 	can_add_player() {
 		return Object.keys(this.players).length < players_allowed_on_team;
@@ -359,7 +394,6 @@ class Team {
 				res = Score.add(res, this.players[pid].score(r));
 			}
 		}
-    console.log(res);
 		return res;
 	}
 
@@ -407,6 +441,17 @@ class League {
 		this.teams = {};
     this.playerpool = new PlayerPool();
 	}
+
+  pretty_print() {
+    var res = {
+      teams: [],
+      players: this.playerpool.pretty_print()
+    };
+    Object.keys(this.teams).forEach(function(t) {
+      res.teams.push(this.teams[t].pretty_print());
+    });
+    return res;
+  }
 
 	add_team(team) {
 		this.teams[team.identifier] = team;
