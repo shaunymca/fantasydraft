@@ -54,6 +54,10 @@ calculations.getPlayers().then(function(output) {
     // this should add a team to the database and also to the League class. The req will include the team name, and anything else you need.
   });
 
+  app.get('predicted_league', function(req, res) {
+    // this will run the prediction class and return the whole leagues predictions
+  });
+
   app.get('nextpickforteam', function(req,res) {
     // this should get the next pick for the team passed to it from the req.
     // ex  - [team:12]
