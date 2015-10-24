@@ -209,10 +209,6 @@ class Score {
 	}
 }
 
-var prediction = "prediction";
-var assigned = "assigned";
-// TODO: set prediction level to be integer that way we can blow it away up to a point
-
 class Draft {
 	constructor(level, team_identifier) {
 		this.level = level;
@@ -220,8 +216,8 @@ class Draft {
 		this.drafted_at = new Date().getTime();
 	}
 
-	is_prediction() {
-		return this.level != assigned;
+	is_prediction(level) {
+		return this.level > level;
 	}
 }
 
@@ -243,8 +239,8 @@ class Player {
 		this.draft = new Draft(level, team_identifier);
 	}
 
-	reset_prediction_draft() {
-		if (this.draft.is_prediction()) {
+	reset_prediction_draft(level) {
+		if (this.draft.is_prediction(level)) {
 			this.draft = null;
 		}
 	}
@@ -294,9 +290,9 @@ class PlayerPool {
 		return this.players[player_identifier];
 	}
 
-	reset_prediction_drafts_for_pool() {
+	reset_prediction_drafts_for_pool(level) {
 		for (var player in this.players) {
-			this.players[player].reset_prediction_draft();
+			this.players[player].reset_prediction_draft(level);
 		}
 	}
 }
@@ -324,9 +320,14 @@ class Team {
 		this.players[player.identifier] = player;
 	}
 
-	reset_prediction_players() {
-		for (var player in this.players) {
-			delete this.players[player];
+	reset_prediction_players(level) {
+		for (var pid in this.players) {
+      if (this.players.hasOwnProperty(pid)) {
+        var player = this.players[pid];
+        if (player.is_prediction(level)) {
+          delete this.players[player];  
+        }
+      }
 		}
 	}
 
