@@ -99,7 +99,6 @@ calculations.getPlayers().then(function(output) {
   });
 
   app.get('/public/*', function(req, res) {
-    console.log('something');
     res.sendfile(__dirname + req.originalUrl);
   });
 });
