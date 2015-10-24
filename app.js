@@ -83,7 +83,12 @@ calculations.getPlayers().then(function(output) {
   });
 
   app.get('/predictDraft', function(req, res) {
-    //this needs to predict the drafts. This might not be neccesary if nextpickforteam will do this automatically and find the player.
+    // TODO: build player pool
+    // TODO: create a league
+    // TODO: add all teams to league
+    // TODO: add all players to teams
+    // TODO: call predict draft
+    // TODO: return team with players and ordering of draft pick
   });
 
   app.get('/bower_components/*', function(req, res) {
