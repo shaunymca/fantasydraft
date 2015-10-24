@@ -33,35 +33,69 @@ app.use(methodOverride());
 /**
  * Routes
  */
+var DB_PLAYERS = [];
+calculations.getPlayers().then(function(output) {
+  // Please initialize all of the needed classes here, so we can call them in the api
+  var DB_PLAYERS = output;
+  var league = new League(DB_PLAYERS);
+  var players = new PlayerPool(DB_PLAYERS);
+  // API SECTION
+  app.get('/', function(req, res) {
+    res.sendfile(__dirname + "/public/js/partials/index.html");
+  });
+  // LEAGUE SETTINGS:
+  // Get the league object
+  app.get('/league', function(req,res) {
+    //console.log(players);
+    res.json(league);
+  });
+  // Add team to the league
+  app.post('addteam', function(req,res) {
+    // this should add a team to the database and also to the League class. The req will include the team name, and anything else you need.
+  });
 
-app.get('/', function(req, res) {
-  res.sendfile(__dirname + "/public/js/partials/index.html");
-});
+  app.get('nextpickforteam', function(req,res) {
+    // this should get the next pick for the team passed to it from the req.
+    // ex  - [team:12]
+  });
 
-app.get('/players', function(req,res) {
-  console.log(new PlayerPool);
-  res.json('hey');
-});
+  app.get('/players', function(req,res) {
+    // this gets the current player pool
+    res.json(players);
+  });
 
-app.get('/populatePlayers', function(req,res) {
-  populatedb.populatePlayerDB();
-});
+  app.get('/populatePlayers', function(req,res) {
+    // this populates the database table for players. DO NOT RUN UNLESS YOU KNOW WHAT YOU'RE DOING
+    populatedb.populatePlayerDB();
+  });
 
-app.post('/addPlayer', function(req, res) {
-  populatedb.addPlayer(req.body)
-  .then(function (output) {
-    res.json(output);
+  app.post('/addPlayer', function(req, res) {
+    //This should add a new player to the db, but it needs to add a player to the playerpool also.
+    populatedb.addPlayer(req.body)
+    .then(function (output) {
+      res.json(output);
+    });
+  });
+
+  app.post('/removePlayer', function(req,res) {
+    //this will remove a player from the POOL, but not the db. This will be used if I find out that a player is injured or something.
+    // I'll rerun the player pick stuff after this so no need to rerun that here.
+  });
+
+  app.get('/predictDraft', function(req.res) {
+    //this needs to predict the drafts. This might not be neccesary if nextpickforteam will do this automatically and find the player.
+  });
+
+  app.get('/bower_components/*', function(req, res) {
+    res.sendfile(__dirname + req.originalUrl);
+  });
+
+  app.get('/public/*', function(req, res) {
+    console.log('something');
+    res.sendfile(__dirname + req.originalUrl);
   });
 });
 
-app.get('/bower_components/*', function(req, res) {
-  res.sendfile(__dirname + req.originalUrl);
-});
-
-app.get('/public/*', function(req, res) {
-  console.log('something');
-  res.sendfile(__dirname + req.originalUrl);
-});
 /**
  * Start Server
  */
@@ -80,17 +114,17 @@ var deep_copy = function(obj) {
 };
 
 class Score {
-	constructor(threePointersMade, assists, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, blocks) {
+	constructor(threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers,totalrebounds) {
 		this.score_map = {
-			threePointersMade: threePointersMade,
+			threepointersmade: threepointersmade,
 			assists: assists,
-			fieldGoalPercentage: fieldGoalPercentage,
-			freeThrowPercentage: freeThrowPercentage,
+      blocks: blocks,
+			fieldgoalpercentage: fieldgoalpercentage,
+			freethrowpercentage: freethrowpercentage,
 			points: points,
 			steals: steals,
-			turnOvers: turnOvers,
-			totalRebounds: totalRebounds,
-			blocks: blocks
+			turnovers: turnovers,
+			totalrebounds: totalrebounds
 		};
 	}
 
@@ -101,15 +135,15 @@ class Score {
     */
 	static add(s1, s2) {
 		return new Score(
-			s1.score_map.threePointersMade + s2.score_map.threePointersMade,
+			s1.score_map.threepointersmade + s2.score_map.threepointersmade,
 			s1.score_map.assists + s2.score_map.assists,
-			s1.score_map.fieldGoalPercentage + s2.score_map.fieldGoalPercentage,
-			s1.score_map.freeThrowPercentage + s2.score_map.freeThrowPercentage,
+			s1.score_map.blocks + s2.score_map.blocks,
+			s1.score_map.fieldgoalpercentage + s2.score_map.fieldgoalpercentage,
+			s1.score_map.freethrowpercentage + s2.score_map.freethrowpercentage,
 			s1.score_map.points + s2.score_map.points,
 			s1.score_map.steals + s2.score_map.steals,
-			s1.score_map.turnOvers + s2.score_map.turnOvers,
-			s1.score_map.totalRebounds + s2.score_map.totalRebounds,
-			s1.score_map.blocks + s2.score_map.blocks
+			s1.score_map.turnovers + s2.score_map.turnovers,
+			s1.score_map.totalrebounds + s2.score_map.totalrebounds
 			);
 	}
 
@@ -189,38 +223,29 @@ class Player {
 }
 
 class PlayerPool {
-	constructor() {
-  		this.players = {};
-
-      return Q.promise(function(resolve) {
-  		calculations.getPlayers().then(function(output) {
-        //console.log(output);
-  			for (var i = 0; i < output.length; i++) {
-          var p = output[i];
-          //console.log(p);
-  				this.players[p.id] = new Player(
-  					p.id,
-  					p.games,
-  					//threePointersMade, assists, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, blocks
-  					new Score(
-              p.threePointersMade,
-              p.assists,
-              p.fieldGoalPercentage,
-              p.freeThrowPercentage,
-              p.points,
-              p.steals,
-              p.turnOvers,
-              p.totalRebounds,
-              p.blocks
-            )
-  				);
-          console.log(this.players[p.id]);
-
-  			}
-  		});
-      console.log(this.players);
-      resolve(this.players);
-    });
+	constructor(players) {
+		this.players = {};
+      //console.log(output);
+			for (var i = 0; i < players.length; i++) {
+        var p = players[i];
+        //console.log(p);
+				this.players[p.id] = new Player(
+					p.id,
+					p.games,
+					//totalrebounds, assists, totalrebounds, totalrebounds, points, steals, totalrebounds, totalRebounds, blocks
+					new Score(
+            p.threepointersmade,
+            p.assists,
+            p.blocks,
+            p.fieldgoalpercentage,
+            p.freethrowpercentage,
+            p.points,
+            p.steals,
+            p.turnovers,
+            p.totalrebounds
+          )
+				);
+			}
 	}
 
 	add_player(player) {
@@ -318,15 +343,17 @@ var _n_random_numbers = function(n) {
 }
 
 class League {
-	constructor() {
+	constructor(players) {
 		this.teams = {};
-		this.player_pool = new PlayerPool();
+    this.playerpool = new PlayerPool(players);
 	}
 
 	add_team(team) {
 		this.teams[team.identifier] = team;
 	}
 
+  // I had to change this because it was causing errors. I don't really know what it does. . .
+  //__level=assigned
 	add_player_to_team(player_identifier, team_identifier, __level) {
 		this.teams[team_identifier].add_player(
 			__level,
@@ -334,14 +361,14 @@ class League {
 	}
 
 	next_pick_for_team(team_identifier) {
-		other_teams = [];
+		var other_teams = [];
 		for (var tid in this.teams) {
 			if (tid != team_identifier) {
 				other_teams.push(this.teams[tid]);
 			}
 		}
 
-		top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
+		var top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
 
 		return pid;
 	}

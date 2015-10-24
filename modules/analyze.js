@@ -6,7 +6,7 @@ var nba = require('./nbaModule'),
     utilities = require('./utilities.js');
 
 
-var stats = {"threePointersMade":"fG3M", "assists":"aST", "blocks":"bLK", "fieldGoalPercentage": "fgPct", "freeThrowPercentage":"ftPct", "points": "pTS", "steals":"sTL", "turnOvers":"tO", "totalRebounds":"rEB"};
+var stats = {"totalrebounds":"fG3M", "assists":"aST", "blocks":"bLK", "totalrebounds": "fgPct", "totalrebounds":"ftPct", "points": "pTS", "steals":"sTL", "totalrebounds":"tO", "totalRebounds":"rEB"};
 
 var statsBenchMark = {};
 

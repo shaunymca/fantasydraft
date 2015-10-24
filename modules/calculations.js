@@ -2,15 +2,15 @@ var utilities = require('./utilities.js'),
     pgdb = require('./populatedb.js'),
     Q = require('q');
 
-var stats = {"threePointersMade": "threePointersMade",
+var stats = {"threepointersmade": "threepointersmade",
               "assists": "assists",
               "blocks": "blocks",
-              "fieldGoalPercentage": "fieldGoalPercentage",
-              "freeThrowPercentage": "freeThrowPercentage",
+              "fieldgoalpercentage": "fieldgoalpercentage",
+              "freethrowpercentage": "freethrowpercentage",
               "points": "points",
               "steals": "steals",
-              "turnOvers": "turnOvers",
-              "totalRebounds": "totalRebounds"};
+              "turnovers": "turnovers",
+              "totalrebounds": "totalrebounds"};
 var distribution = {};
 
 var players = [];

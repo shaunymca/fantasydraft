@@ -25,8 +25,8 @@ exports.populatePlayerDB = function() {
         for (var key in player) {
             player_values.push(player[key]);
         }
-        client.query('Insert into players (player, games, threePointersMade, assists, blocks, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
-          [player.player, player.games, player.threePointersMade, player.assists, player.blocks, player.fieldGoalPercentage, player.freeThrowPercentage, player.points, player.steals, player.turnOvers, player.totalRebounds, player.position], function(err, result) {
+        client.query('Insert into players (player, games, threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers, totalrebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+          [player.player, player.games, player.threepointersmade, player.assists, player.blocks, player.fieldgoalpercentage, player.freethrowpercentage, player.points, player.steals, player.turnovers, player.totalrebounds, player.position], function(err, result) {
           //call `done()` to release the client back to the pool
           done();
 
@@ -71,8 +71,8 @@ exports.addPlayer = function(player) {
       if(err) {
         return console.error('error fetching client from pool', err);
       }
-      client.query('Insert into players (player, games, threePointersMade, assists, blocks, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
-        [player.player, player.games, player.threePointersMade, player.assists, player.blocks, player.fieldGoalPercentage, player.freeThrowPercentage, player.points, player.steals, player.turnOvers, player.totalRebounds, player.position], function(err, result) {
+      client.query('Insert into players (player, games, threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers, totalrebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+        [player.player, player.games, player.threepointersmade, player.assists, player.blocks, player.fieldgoalpercentage, player.freethrowpercentage, player.points, player.steals, player.turnovers, player.totalrebounds, player.position], function(err, result) {
         done();
 
         if(err) {
