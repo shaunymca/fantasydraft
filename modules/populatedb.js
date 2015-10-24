@@ -25,8 +25,8 @@ exports.populatePlayerDB = function() {
         for (var key in player) {
             player_values.push(player[key]);
         }
-        client.query('Insert into players (player, g, mpg, fg, fgp, ft, ftp, pt, ptp, rpg, apg, spg, tpg, bpg, ppg, fpts, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)',
-          [player.player, player.g, player.mpg, player.fg, player.fgp, player.ft, player.ftp, player.pt, player.ptp, player.rpg, player.apg, player.spg, player.tpg, player.bpg, player.ppg, player.fpts, player.position], function(err, result) {
+        client.query('Insert into players (player, games, threePointersMade, assists, blocks, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+          [player.player, player.games, player.threePointersMade, player.assists, player.blocks, player.fieldGoalPercentage, player.freeThrowPercentage, player.points, player.steals, player.turnOvers, player.totalRebounds, player.position], function(err, result) {
           //call `done()` to release the client back to the pool
           done();
 
@@ -71,8 +71,8 @@ exports.addPlayer = function(player) {
       if(err) {
         return console.error('error fetching client from pool', err);
       }
-      client.query('Insert into players (player, g, mpg, fg, fgp, ft, ftp, pt, ptp, rpg, apg, spg, tpg, bpg, ppg, fpts, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING id',
-        [player.player, player.g, player.mpg, player.fg, player.fgp, player.ft, player.ftp, player.pt, player.ptp, player.rpg, player.apg, player.spg, player.tpg, player.bpg, player.ppg, player.fpts, player.position], function(err, result) {
+      client.query('Insert into players (player, games, threePointersMade, assists, blocks, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+        [player.player, player.games, player.threePointersMade, player.assists, player.blocks, player.fieldGoalPercentage, player.freeThrowPercentage, player.points, player.steals, player.turnOvers, player.totalRebounds, player.position], function(err, result) {
         done();
 
         if(err) {
