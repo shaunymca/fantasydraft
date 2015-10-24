@@ -132,7 +132,6 @@ var init_league = function(teams, players) {
  });
 
  app.get('/public/*', function(req, res) {
-   console.log('something');
    res.sendfile(__dirname + req.originalUrl);
  });
 
