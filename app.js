@@ -105,6 +105,44 @@ http.createServer(app).listen(app.get('port'), function () {
 });
 
 
+/*
+pick_player_for_team(t, other_teams, unpicked_players, n_games):
+  "picks the player which makes the number of teams
+  that this team will beat the greatest"
+
+  top_wins = compare_team_to_all_teams(t, other_teams, n_games)
+
+  best_player = nil
+
+  for (p in unpicked_players):
+    other_teams_with_picks = pick_teams(conj(add_player(t, p), other_teams), dissoc(p, unpicked_players), n_games)
+    w = compare_team_to_all_teams(add_player(t, p), other_teams_with_picks, n_games)
+    if (top_wins < w):
+      top_wins = w
+      best_player = p
+
+  return p
+
+;; TODO: put draft round onto team object so that you know how to order teams for picking
+pick_teams(current_teams, unpicked_players, n_games):
+  if (teams-are-full):
+    return current_teams
+  if (teams-have-different-counts):
+    throw some crazy fucking exception!
+
+  teams = current_teams
+  players = unpicked_players
+
+  for (t in ordered_by_draft_pick(teams)):
+    p = pick_player_for_team(t, dissoc(t, teams), players, n_games)
+    add_player(t, p)
+    drop(p, players)
+
+  teams = pick_teams(teams, players, n_games)
+
+  return teams
+*/
+
 
 var games_in_season = 82; //https://en.m.wikipedia.org/wiki/National_Basketball_Association#Regular_season
 var players_allowed_on_team = 15;
@@ -199,7 +237,7 @@ class Player {
 	}
 
 	draft(level, team_identifier) {
-		if (this.can_draft() == false) {
+		if (this.can_draft() === false) {
 			throw "player already drafted: " + this.identifier;
 		}
 		this.draft = new Draft(level, team_identifier);
@@ -314,7 +352,7 @@ class Team {
 	}
 
 	static comp(t1, t2, random_numbers) {
-		res = 0;
+		var res = 0;
 		for (var r in random_numbers) {
 			if (0 < Score.comp(t1.score(), t2.score())) {
 				res += 1;
@@ -327,20 +365,20 @@ class Team {
 }
 
 var _order_teams = function(teams) {
-	res = [];
+	var res = [];
 	for (var k in teams) {
 		res.push(teams[k]);
 	}
 	return res;
-}
+};
 
 var _n_random_numbers = function(n) {
-	res = [];
+	var res = [];
 	for (var i = 0; i < n; i++) {
 		res.push(Math.random());
 	}
 	return res;
-}
+};
 
 class League {
 	constructor(players) {
@@ -387,10 +425,10 @@ class League {
 			return null;
 		}
 
-		ordered_teams = _order_teams(this.teams);
+		var ordered_teams = _order_teams(this.teams);
 
 		for (var team_identifier in ordered_teams) {
-			player_identifier = this.next_pick_for_team(team_identifier);
+			var player_identifier = this.next_pick_for_team(team_identifier);
 			this.add_player_to_team(player_identifier, team_identifier, prediction);
 		}
 
