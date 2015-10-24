@@ -1,3 +1,5 @@
+calculations = require("./modules/calculations.js");
+
 var games_in_season = 82; //https://en.m.wikipedia.org/wiki/National_Basketball_Association#Regular_season
 var players_allowed_on_team = 15;
 
@@ -6,7 +8,7 @@ var deep_copy = function(obj) {
 }
 
 class Score {
-	constructor(threePointersMade, assists, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds) {
+	constructor(threePointersMade, assists, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, blocks) {
 		this.score_map = {
 			threePointersMade: threePointersMade,
 			assists: assists,
@@ -15,7 +17,8 @@ class Score {
 			points: points,
 			steals: steals,
 			turnOvers: turnOvers,
-			totalRebounds: totalRebounds
+			totalRebounds: totalRebounds,
+			blocks: blocks
 		};
 	}
 
@@ -32,7 +35,8 @@ class Score {
 			s1.score_map.points + s2.score_map.points,
 			s1.score_map.steals + s2.score_map.steals,
 			s1.score_map.turnOvers + s2.score_map.turnOvers,
-			s1.score_map.totalRebounds + s2.score_map.totalRebounds
+			s1.score_map.totalRebounds + s2.score_map.totalRebounds,
+			s1.score_map.blocks + s2.score_map.blocks
 			);
 	}
 
@@ -56,7 +60,7 @@ class Score {
 	}
 
 	static blank_score() {
-		return new Score(0, 0, 0, 0, 0, 0, 0, 0);
+		return new Score(0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 }
 
@@ -81,7 +85,6 @@ class Player {
 		this.identifier = identifier;
 		this.games_expected_to_play = games_expected_to_play;
 		this.score = score;
-		this.team_identifier = null;
 	}
 
 	can_draft() {
@@ -92,7 +95,7 @@ class Player {
 		if (this.can_draft() == false) {
 			throw "player already drafted: " + this.identifier;
 		}
-		this.team_identifier = team_identifier;
+		this.draft = new Draft(level, team_identifier);
 	}
 
 	reset_prediction_draft() {
@@ -115,6 +118,19 @@ class Player {
 class PlayerPool {
 	constructor() {
 		this.players = {};
+
+		calculations.getPlayers().then(function(output) {
+			for (var p in output) {
+				this.players[output.id] = new Player(
+					p.id,
+					p.g,
+					//threePointersMade, assists, fieldGoalPercentage, freeThrowPercentage, points, steals, turnOvers, totalRebounds, blocks
+					new Score(
+						p.
+						)
+					);
+			}
+		}).resolve();
 	}
 
 	add_player(player) {
@@ -143,6 +159,7 @@ class Team {
 		return Object.keys(this.players).length < players_allowed_on_team;
 	}
 
+	// TODO: has own property for every for loop
 	add_player(level, player) {
 		if (player.identifier in this.players) {
 			throw "identifier already used: " + player.identifier " for team: " + this.identifier;
@@ -235,18 +252,16 @@ class League {
 
 		top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
 
-
+		return pid;
 	}
 
 	all_teams_drafted() {
-		res = true;
 		for (var t in this.teams) {
 			if (this.teams[t].can_add_player()) {
-				need_to_draft = false;
-				break;
+				return false;
 			}
 		}
-		return res;
+		return true;
 	}
 
 	predict_draft_teams() {
