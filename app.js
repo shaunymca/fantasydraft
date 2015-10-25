@@ -19,7 +19,8 @@ var express = require('express'),
   machine_learning = require('machine_learning'),
   draft = require('./modules/draft.js'),
   populatedb = require('./modules/populatedb.js'),
-  Q = require('q');
+  Q = require('q'),
+  utilities = require('./modules/utilities.js');
 
 var app = module.exports = express();
 
@@ -126,7 +127,7 @@ var init_league = function(teams, players) {
      populatedb.getTeams().then(function(teams){
        try {
          var l = init_league(teams, players);
-         l.predict_draft_teams(0);
+         l.predict_draft_teams(1, 0);
          res.json(l.pretty_print());
        } catch (err) {
          console.log(err);
@@ -479,7 +480,7 @@ class League {
 			this.playerpool.get_player(player_identifier));
 	}
 
-	next_pick_for_team(team_identifier) {
+	next_pick_for_team(draft_id, level, team_identifier) {
     var self = this;
     var other_teams = [];
 
@@ -517,23 +518,13 @@ class League {
 		return true;
 	}
 
-	predict_draft_teams(l) {
-    var level = l;
-    if (level === 0 || level === null || level === undefined) {
-      level = 1;
+	predict_draft_teams(draft_id, level) {
+    var draft_rounds = utilities.pickOrder();
+    for (var i = (draft_id - 1); i < draft_rounds.length; i++) {
+      var draft_round = draft_rounds[i];
+      var team_id = draft_round.teamid;
+      var player_identifier = this.next_pick_for_team(draft_id, level, team_id);
+      this.add_player_to_team(player_identifier, team_id, level);
     }
-    console.log("predicting at level: " + level);
-
-		if (this.all_teams_drafted()) {
-			return null;
-		}
-
-    var self = this;
-    Object.keys(this.teams).forEach(function(t) {
-      var player_identifier = self.next_pick_for_team(t);
-      self.add_player_to_team(player_identifier, t, level);
-    });
-
-		return this.predict_draft_teams(level + 1);
 	}
 }
