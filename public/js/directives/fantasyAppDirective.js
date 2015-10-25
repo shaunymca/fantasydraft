@@ -8,11 +8,10 @@
         controller: [
           "$scope", "managerService", function($scope, managerService) {
           managerService.leagues().success(function(result) {
-              console.log(result);
               $scope.leagues = result.players;
               return $scope.apply;
           });
-          return $scope.addManager = function() {
+          $scope.addManager = function() {
               var params;
               console.log("saving!");
               $scope.error = null;
@@ -23,8 +22,14 @@
             return managerService.addManager(params).success(function(league) {
               console.log("SUCCESS");
             }).error(function(error) {
-              $scope.databaseCheck = null;
               return $scope.error = error;
+            });
+          };
+          $scope.getPredictions = function() {
+            console.log('getPredictions');
+            managerService.getPredictions().success(function(result) {
+              $scope.teams = result.teams;
+              return $scope.apply;
             });
           };
         }]
