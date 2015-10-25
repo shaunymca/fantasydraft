@@ -636,7 +636,6 @@ class League {
 	}
 
 	predict_draft_teams(draft_id, level) {
-    console.log("draft_id: " + draft_id + " level: " + level);
     var draft_rounds = utilities.pickOrder();
     for (var i = (draft_id - 1); i < draft_rounds.length; i++) {
       var draft_round = draft_rounds[i];
