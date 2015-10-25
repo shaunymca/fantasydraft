@@ -132,7 +132,7 @@ var init_league = function(teams, players) {
      populatedb.getTeams().then(function(teams){
        try {
          var l = init_league(teams, players);
-         l.predict_draft_teams(1, 0);
+         l.predict_draft_teams(req.query.draft_id, 0);
          res.json(l.pretty_print());
        } catch (err) {
          console.log(err);
