@@ -528,11 +528,12 @@ class League {
 			return null;
 		}
 
-    var self = this;
-    Object.keys(this.teams).forEach(function(t) {
-      var player_identifier = self.next_pick_for_team(t);
-      self.add_player_to_team(player_identifier, t, level);
-    });
+    var team_ids = Object.keys(this.teams);
+    for (var i = 0; i < team_ids.length; i++) {
+      var team_id = team_ids[i];
+      var player_identifier = this.next_pick_for_team(team_id);
+      this.add_player_to_team(player_identifier, team_id, level);
+    }
 
 		return this.predict_draft_teams(level + 1);
 	}
