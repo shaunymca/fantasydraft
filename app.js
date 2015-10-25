@@ -74,6 +74,7 @@ var init_league = function(teams, players) {
     }
   }
 
+  l.playerpool.assign_order();
   return l;
 };
 
@@ -278,6 +279,14 @@ class Draft {
 	}
 }
 
+var _n_random_numbers = function(n) {
+	var res = [];
+	for (var i = 0; i < n; i++) {
+		res.push(Math.random());
+	}
+	return res;
+};
+
 class Player {
 	constructor(identifier, name, z_score_sum, z_score_avg, games_expected_to_play, position, score, draft) {
 		this.identifier = identifier;
@@ -288,6 +297,7 @@ class Player {
     this.position = position;
 		this.score = score;
     this.draft = draft;
+    this.rank = null;
 	}
 
   pretty_print() {
@@ -303,7 +313,7 @@ class Player {
   }
 
 	can_draft() {
-		return this.draft === null || this.draft === undefined;
+		return (this.draft === null || this.draft === undefined) && (this.z_score_sum > 0);
 	}
 
 	assign_to_team(level, team_identifier) {
@@ -319,7 +329,7 @@ class Player {
 		}
 	}
 
-	score(r) {
+	r_score(r) {
 		if (r < 0 || 1 < r) {
 			throw "invalid random number: " + r;
 		}
@@ -328,6 +338,20 @@ class Player {
 		}
 		return Score.blank_score();
 	}
+
+  static comp(p1, p2) {
+    var r_n = _n_random_numbers(100);
+    var res = 0;
+		for (var i = 0; i < r_n.length; i++) {
+      var r = r_n[i];
+			if (0 < Score.comp(p1.r_score(r), p2.r_score(r))) {
+				res += 1;
+			} else {
+				res -= 1;
+			}
+		}
+		return res;
+  }
 }
 
 class PlayerPool {
@@ -357,6 +381,20 @@ class PlayerPool {
 			this.players[player].reset_prediction_draft(level);
 		}
 	}
+
+  assign_order() {
+    var self = this;
+    var players = [];
+    Object.keys(this.players).forEach(function(p) {
+      players.push(self.players[p]);
+    });
+
+    players.sort(Player.comp);
+
+    for (var i = 0; i < players.length; i++) {
+      players[i].rank = i + 1;
+    }
+  }
 }
 
 var number_guards = 4;
@@ -492,20 +530,16 @@ var _order_teams = function(teams) {
 	return res;
 };
 
-var _n_random_numbers = function(n) {
-	var res = [];
-	for (var i = 0; i < n; i++) {
-		res.push(Math.random());
-	}
-	return res;
-};
+var _just_assign_player = function(rank, level) {
+  if (rank < 100) {
+    return true;
+  }
 
-var _just_assign_player = function(level) {
   if (level < 10) {
     return false;
   }
   var r = Math.random();
-  return r > (1 / level);
+  return r > (1 / level + 100);
 };
 
 class League {
@@ -567,9 +601,8 @@ class League {
     for (var i = 0; i < player_ids.length; i++) {
       var player_id = player_ids[i];
       var player = this.playerpool.get_player(player_id);
-      //console.log("can draft: " + player.can_draft() + " player: " + JSON.stringify(player.pretty_print()) + " and player makes team: " + team_identifier + " invalid: " + team.player_makes_team_invalid(player))
-      if (player.can_draft() && !(team.player_makes_team_invalid(player))) {
-        if (_just_assign_player(level)) {
+      if (player.rank <= 200 && player.can_draft() && !(team.player_makes_team_invalid(player))) {
+        if (_just_assign_player(player.rank, level)) {
           return player_id;
         }
         this.add_player_to_team(player_id, team_identifier, level);
