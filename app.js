@@ -89,11 +89,15 @@ var init_league = function(teams, players) {
    });
  });
  // Add team to the league
- app.post('addteam', function(req,res) {
+ app.post('/addteam', function(req,res) {
+   //console.log(req.body);
+   populatedb.addTeam(req.body).then(function(output){
+     res.json(output);
+   });
    // this should add a team to the database and also to the League class. The req will include the team name, and anything else you need.
  });
 
- app.get('nextpickforteam', function(req,res) {
+ app.get('/nextpickforteam', function(req,res) {
    // this should get the next pick for the team passed to it from the req.
    // ex  - [team:12]
  });

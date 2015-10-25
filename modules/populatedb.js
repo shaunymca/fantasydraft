@@ -115,11 +115,12 @@ exports.addTeam = function(team) {
       if(err) {
         return console.error('error fetching client from pool', err);
       }
+      console.log(team);
       client.query((
         ' INSERT INTO teams' +
-        ' (name)' +
-        '  VALUES ($1)'),
-        [team.name],
+        ' (name, draft_pick)' +
+        '  VALUES ($1, $2) RETURNING *') ,
+        [team.name, team.draft_pick],
         function(err, result) {
         done();
 

@@ -1,4 +1,9 @@
-hello SHaun
-  <div ng-repeat="league in leagues">
-    league
+<form name="databaseForm">
+  <div class="form-group">
+    <input type="text" class="form-control" id="teamName" ng-model="teamName" placeholder="Team Name" required>
   </div>
+  <div class="form-group">
+    <input type="number" class="form-control" id="draft_pick" ng-model="draft_pick" placeholder="Draft Pick" required>
+  </div>
+  <button  ng-disabled="databaseForm.$invalid" class="btn btn-primary register-button" ng-click="addManager()" required>Add Manager</button>
+</form>
