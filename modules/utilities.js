@@ -6983,7 +6983,7 @@ exports.forcasts = function() {
 };
 
 exports.pickOrder = function() {
-  [
+  return [
     {
         "draftid": 1,
         "teamid": 1,
@@ -7824,5 +7824,5 @@ exports.pickOrder = function() {
         "teamid": 12,
         "round": 15
     }
-  ]
-}
+  ];
+};
