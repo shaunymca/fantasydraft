@@ -6981,3 +6981,848 @@ exports.forcasts = function() {
       }
   ];
 };
+
+exports.pickOrder = function() {
+  [
+    {
+        "draftid": 1,
+        "teamid": 1,
+        "round": 1
+    },
+    {
+        "draftid": 2,
+        "teamid": 2,
+        "round": 1
+    },
+    {
+        "draftid": 3,
+        "teamid": 3,
+        "round": 1
+    },
+    {
+        "draftid": 4,
+        "teamid": 4,
+        "round": 1
+    },
+    {
+        "draftid": 5,
+        "teamid": 5,
+        "round": 1
+    },
+    {
+        "draftid": 6,
+        "teamid": 6,
+        "round": 1
+    },
+    {
+        "draftid": 7,
+        "teamid": 7,
+        "round": 1
+    },
+    {
+        "draftid": 8,
+        "teamid": 8,
+        "round": 1
+    },
+    {
+        "draftid": 9,
+        "teamid": 9,
+        "round": 1
+    },
+    {
+        "draftid": 10,
+        "teamid": 10,
+        "round": 1
+    },
+    {
+        "draftid": 11,
+        "teamid": 11,
+        "round": 1
+    },
+    {
+        "draftid": 12,
+        "teamid": 12,
+        "round": 1
+    },
+    {
+        "draftid": 13,
+        "teamid": 12,
+        "round": 2
+    },
+    {
+        "draftid": 14,
+        "teamid": 11,
+        "round": 2
+    },
+    {
+        "draftid": 15,
+        "teamid": 10,
+        "round": 2
+    },
+    {
+        "draftid": 16,
+        "teamid": 9,
+        "round": 2
+    },
+    {
+        "draftid": 17,
+        "teamid": 8,
+        "round": 2
+    },
+    {
+        "draftid": 18,
+        "teamid": 7,
+        "round": 2
+    },
+    {
+        "draftid": 19,
+        "teamid": 6,
+        "round": 2
+    },
+    {
+        "draftid": 20,
+        "teamid": 5,
+        "round": 2
+    },
+    {
+        "draftid": 21,
+        "teamid": 4,
+        "round": 2
+    },
+    {
+        "draftid": 22,
+        "teamid": 3,
+        "round": 2
+    },
+    {
+        "draftid": 23,
+        "teamid": 2,
+        "round": 2
+    },
+    {
+        "draftid": 24,
+        "teamid": 1,
+        "round": 2
+    },
+    {
+        "draftid": 25,
+        "teamid": 12,
+        "round": 3
+    },
+    {
+        "draftid": 26,
+        "teamid": 11,
+        "round": 3
+    },
+    {
+        "draftid": 27,
+        "teamid": 10,
+        "round": 3
+    },
+    {
+        "draftid": 28,
+        "teamid": 9,
+        "round": 3
+    },
+    {
+        "draftid": 29,
+        "teamid": 8,
+        "round": 3
+    },
+    {
+        "draftid": 30,
+        "teamid": 7,
+        "round": 3
+    },
+    {
+        "draftid": 31,
+        "teamid": 6,
+        "round": 3
+    },
+    {
+        "draftid": 32,
+        "teamid": 5,
+        "round": 3
+    },
+    {
+        "draftid": 33,
+        "teamid": 4,
+        "round": 3
+    },
+    {
+        "draftid": 34,
+        "teamid": 3,
+        "round": 3
+    },
+    {
+        "draftid": 35,
+        "teamid": 2,
+        "round": 3
+    },
+    {
+        "draftid": 36,
+        "teamid": 1,
+        "round": 3
+    },
+    {
+        "draftid": 37,
+        "teamid": 1,
+        "round": 4
+    },
+    {
+        "draftid": 38,
+        "teamid": 2,
+        "round": 4
+    },
+    {
+        "draftid": 39,
+        "teamid": 3,
+        "round": 4
+    },
+    {
+        "draftid": 40,
+        "teamid": 4,
+        "round": 4
+    },
+    {
+        "draftid": 41,
+        "teamid": 5,
+        "round": 4
+    },
+    {
+        "draftid": 42,
+        "teamid": 6,
+        "round": 4
+    },
+    {
+        "draftid": 43,
+        "teamid": 7,
+        "round": 4
+    },
+    {
+        "draftid": 44,
+        "teamid": 8,
+        "round": 4
+    },
+    {
+        "draftid": 45,
+        "teamid": 9,
+        "round": 4
+    },
+    {
+        "draftid": 46,
+        "teamid": 10,
+        "round": 4
+    },
+    {
+        "draftid": 47,
+        "teamid": 11,
+        "round": 4
+    },
+    {
+        "draftid": 48,
+        "teamid": 12,
+        "round": 4
+    },
+    {
+        "draftid": 49,
+        "teamid": 12,
+        "round": 5
+    },
+    {
+        "draftid": 50,
+        "teamid": 11,
+        "round": 5
+    },
+    {
+        "draftid": 51,
+        "teamid": 10,
+        "round": 5
+    },
+    {
+        "draftid": 52,
+        "teamid": 9,
+        "round": 5
+    },
+    {
+        "draftid": 53,
+        "teamid": 8,
+        "round": 5
+    },
+    {
+        "draftid": 54,
+        "teamid": 7,
+        "round": 5
+    },
+    {
+        "draftid": 55,
+        "teamid": 6,
+        "round": 5
+    },
+    {
+        "draftid": 56,
+        "teamid": 5,
+        "round": 5
+    },
+    {
+        "draftid": 57,
+        "teamid": 4,
+        "round": 5
+    },
+    {
+        "draftid": 58,
+        "teamid": 3,
+        "round": 5
+    },
+    {
+        "draftid": 59,
+        "teamid": 2,
+        "round": 5
+    },
+    {
+        "draftid": 60,
+        "teamid": 1,
+        "round": 5
+    },
+    {
+        "draftid": 61,
+        "teamid": 1,
+        "round": 7
+    },
+    {
+        "draftid": 62,
+        "teamid": 2,
+        "round": 7
+    },
+    {
+        "draftid": 63,
+        "teamid": 3,
+        "round": 7
+    },
+    {
+        "draftid": 64,
+        "teamid": 4,
+        "round": 7
+    },
+    {
+        "draftid": 65,
+        "teamid": 5,
+        "round": 7
+    },
+    {
+        "draftid": 66,
+        "teamid": 6,
+        "round": 7
+    },
+    {
+        "draftid": 67,
+        "teamid": 7,
+        "round": 7
+    },
+    {
+        "draftid": 68,
+        "teamid": 8,
+        "round": 7
+    },
+    {
+        "draftid": 69,
+        "teamid": 9,
+        "round": 7
+    },
+    {
+        "draftid": 70,
+        "teamid": 10,
+        "round": 7
+    },
+    {
+        "draftid": 71,
+        "teamid": 11,
+        "round": 7
+    },
+    {
+        "draftid": 72,
+        "teamid": 12,
+        "round": 7
+    },
+    {
+        "draftid": 73,
+        "teamid": 12,
+        "round": 8
+    },
+    {
+        "draftid": 74,
+        "teamid": 11,
+        "round": 8
+    },
+    {
+        "draftid": 75,
+        "teamid": 10,
+        "round": 8
+    },
+    {
+        "draftid": 76,
+        "teamid": 9,
+        "round": 8
+    },
+    {
+        "draftid": 77,
+        "teamid": 8,
+        "round": 8
+    },
+    {
+        "draftid": 78,
+        "teamid": 7,
+        "round": 8
+    },
+    {
+        "draftid": 79,
+        "teamid": 6,
+        "round": 8
+    },
+    {
+        "draftid": 80,
+        "teamid": 5,
+        "round": 8
+    },
+    {
+        "draftid": 81,
+        "teamid": 4,
+        "round": 8
+    },
+    {
+        "draftid": 82,
+        "teamid": 3,
+        "round": 8
+    },
+    {
+        "draftid": 83,
+        "teamid": 2,
+        "round": 8
+    },
+    {
+        "draftid": 84,
+        "teamid": 1,
+        "round": 8
+    },
+    {
+        "draftid": 85,
+        "teamid": 1,
+        "round": 9
+    },
+    {
+        "draftid": 86,
+        "teamid": 2,
+        "round": 9
+    },
+    {
+        "draftid": 87,
+        "teamid": 3,
+        "round": 9
+    },
+    {
+        "draftid": 88,
+        "teamid": 4,
+        "round": 9
+    },
+    {
+        "draftid": 89,
+        "teamid": 5,
+        "round": 9
+    },
+    {
+        "draftid": 90,
+        "teamid": 6,
+        "round": 9
+    },
+    {
+        "draftid": 91,
+        "teamid": 7,
+        "round": 9
+    },
+    {
+        "draftid": 92,
+        "teamid": 8,
+        "round": 9
+    },
+    {
+        "draftid": 93,
+        "teamid": 9,
+        "round": 9
+    },
+    {
+        "draftid": 94,
+        "teamid": 10,
+        "round": 9
+    },
+    {
+        "draftid": 95,
+        "teamid": 11,
+        "round": 9
+    },
+    {
+        "draftid": 96,
+        "teamid": 12,
+        "round": 9
+    },
+    {
+        "draftid": 97,
+        "teamid": 12,
+        "round": 10
+    },
+    {
+        "draftid": 98,
+        "teamid": 11,
+        "round": 10
+    },
+    {
+        "draftid": 99,
+        "teamid": 10,
+        "round": 10
+    },
+    {
+        "draftid": 100,
+        "teamid": 9,
+        "round": 10
+    },
+    {
+        "draftid": 101,
+        "teamid": 8,
+        "round": 10
+    },
+    {
+        "draftid": 102,
+        "teamid": 7,
+        "round": 10
+    },
+    {
+        "draftid": 103,
+        "teamid": 6,
+        "round": 10
+    },
+    {
+        "draftid": 104,
+        "teamid": 5,
+        "round": 10
+    },
+    {
+        "draftid": 105,
+        "teamid": 4,
+        "round": 10
+    },
+    {
+        "draftid": 106,
+        "teamid": 3,
+        "round": 10
+    },
+    {
+        "draftid": 107,
+        "teamid": 2,
+        "round": 10
+    },
+    {
+        "draftid": 108,
+        "teamid": 1,
+        "round": 10
+    },
+    {
+        "draftid": 109,
+        "teamid": 1,
+        "round": 11
+    },
+    {
+        "draftid": 110,
+        "teamid": 2,
+        "round": 11
+    },
+    {
+        "draftid": 111,
+        "teamid": 3,
+        "round": 11
+    },
+    {
+        "draftid": 112,
+        "teamid": 4,
+        "round": 11
+    },
+    {
+        "draftid": 113,
+        "teamid": 5,
+        "round": 11
+    },
+    {
+        "draftid": 114,
+        "teamid": 6,
+        "round": 11
+    },
+    {
+        "draftid": 115,
+        "teamid": 7,
+        "round": 11
+    },
+    {
+        "draftid": 116,
+        "teamid": 8,
+        "round": 11
+    },
+    {
+        "draftid": 117,
+        "teamid": 9,
+        "round": 11
+    },
+    {
+        "draftid": 118,
+        "teamid": 10,
+        "round": 11
+    },
+    {
+        "draftid": 119,
+        "teamid": 11,
+        "round": 11
+    },
+    {
+        "draftid": 120,
+        "teamid": 12,
+        "round": 11
+    },
+    {
+        "draftid": 121,
+        "teamid": 12,
+        "round": 12
+    },
+    {
+        "draftid": 122,
+        "teamid": 11,
+        "round": 12
+    },
+    {
+        "draftid": 123,
+        "teamid": 10,
+        "round": 12
+    },
+    {
+        "draftid": 124,
+        "teamid": 9,
+        "round": 12
+    },
+    {
+        "draftid": 125,
+        "teamid": 8,
+        "round": 12
+    },
+    {
+        "draftid": 126,
+        "teamid": 7,
+        "round": 12
+    },
+    {
+        "draftid": 127,
+        "teamid": 6,
+        "round": 12
+    },
+    {
+        "draftid": 128,
+        "teamid": 5,
+        "round": 12
+    },
+    {
+        "draftid": 129,
+        "teamid": 4,
+        "round": 12
+    },
+    {
+        "draftid": 130,
+        "teamid": 3,
+        "round": 12
+    },
+    {
+        "draftid": 131,
+        "teamid": 2,
+        "round": 12
+    },
+    {
+        "draftid": 132,
+        "teamid": 1,
+        "round": 12
+    },
+    {
+        "draftid": 133,
+        "teamid": 1,
+        "round": 13
+    },
+    {
+        "draftid": 134,
+        "teamid": 2,
+        "round": 13
+    },
+    {
+        "draftid": 135,
+        "teamid": 3,
+        "round": 13
+    },
+    {
+        "draftid": 136,
+        "teamid": 4,
+        "round": 13
+    },
+    {
+        "draftid": 137,
+        "teamid": 5,
+        "round": 13
+    },
+    {
+        "draftid": 138,
+        "teamid": 6,
+        "round": 13
+    },
+    {
+        "draftid": 139,
+        "teamid": 7,
+        "round": 13
+    },
+    {
+        "draftid": 140,
+        "teamid": 8,
+        "round": 13
+    },
+    {
+        "draftid": 141,
+        "teamid": 9,
+        "round": 13
+    },
+    {
+        "draftid": 142,
+        "teamid": 10,
+        "round": 13
+    },
+    {
+        "draftid": 143,
+        "teamid": 11,
+        "round": 13
+    },
+    {
+        "draftid": 144,
+        "teamid": 12,
+        "round": 13
+    },
+    {
+        "draftid": 145,
+        "teamid": 12,
+        "round": 14
+    },
+    {
+        "draftid": 146,
+        "teamid": 11,
+        "round": 14
+    },
+    {
+        "draftid": 147,
+        "teamid": 10,
+        "round": 14
+    },
+    {
+        "draftid": 148,
+        "teamid": 9,
+        "round": 14
+    },
+    {
+        "draftid": 149,
+        "teamid": 8,
+        "round": 14
+    },
+    {
+        "draftid": 150,
+        "teamid": 7,
+        "round": 14
+    },
+    {
+        "draftid": 151,
+        "teamid": 6,
+        "round": 14
+    },
+    {
+        "draftid": 152,
+        "teamid": 5,
+        "round": 14
+    },
+    {
+        "draftid": 153,
+        "teamid": 4,
+        "round": 14
+    },
+    {
+        "draftid": 154,
+        "teamid": 3,
+        "round": 14
+    },
+    {
+        "draftid": 155,
+        "teamid": 2,
+        "round": 14
+    },
+    {
+        "draftid": 156,
+        "teamid": 1,
+        "round": 14
+    },
+    {
+        "draftid": 157,
+        "teamid": 1,
+        "round": 15
+    },
+    {
+        "draftid": 158,
+        "teamid": 2,
+        "round": 15
+    },
+    {
+        "draftid": 159,
+        "teamid": 3,
+        "round": 15
+    },
+    {
+        "draftid": 160,
+        "teamid": 4,
+        "round": 15
+    },
+    {
+        "draftid": 161,
+        "teamid": 5,
+        "round": 15
+    },
+    {
+        "draftid": 162,
+        "teamid": 6,
+        "round": 15
+    },
+    {
+        "draftid": 163,
+        "teamid": 7,
+        "round": 15
+    },
+    {
+        "draftid": 164,
+        "teamid": 8,
+        "round": 15
+    },
+    {
+        "draftid": 165,
+        "teamid": 9,
+        "round": 15
+    },
+    {
+        "draftid": 166,
+        "teamid": 10,
+        "round": 15
+    },
+    {
+        "draftid": 167,
+        "teamid": 11,
+        "round": 15
+    },
+    {
+        "draftid": 168,
+        "teamid": 12,
+        "round": 15
+    }
+  ]
+}
