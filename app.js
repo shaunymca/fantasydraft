@@ -48,7 +48,11 @@ var init_league = function(teams, players) {
 
     var p = new Player(
       db_p.id,
+      db_p.player,
+      db_p.sumzscores,
+      db_p.averagez,
       db_p.games,
+      db_p.position,
       new Score(
         db_p.threepointersmade,
         db_p.assists,
@@ -270,14 +274,18 @@ class Draft {
 	}
 
 	is_prediction(level) {
-		return this.level > level;
+		return this.level >= level;
 	}
 }
 
 class Player {
-	constructor(identifier, games_expected_to_play, score, draft) {
+	constructor(identifier, name, z_score_sum, z_score_avg, games_expected_to_play, position, score, draft) {
 		this.identifier = identifier;
+    this.name = name;
+    this.z_score_sum = z_score_sum;
+    this.z_score_avg = z_score_avg;
 		this.games_expected_to_play = games_expected_to_play;
+    this.position = position;
 		this.score = score;
     this.draft = draft;
 	}
@@ -285,6 +293,8 @@ class Player {
   pretty_print() {
     var res = {
       player_id: this.identifier,
+      name: this.name,
+      position: this.position
     };
     if (this.draft) {
       res.drafted_at = this.draft.drafted_at;
@@ -304,7 +314,7 @@ class Player {
 	}
 
 	reset_prediction_draft(level) {
-		if (this.draft.is_prediction(level)) {
+		if (this.draft && this.draft.is_prediction(level)) {
 			this.draft = null;
 		}
 	}
@@ -349,6 +359,10 @@ class PlayerPool {
 	}
 }
 
+var number_guards = 4;
+var number_forwards = 4;
+var number_centers = 2;
+
 class Team {
 	constructor(identifier, name, draft_pick) {
 		this.identifier = identifier;
@@ -361,6 +375,7 @@ class Team {
     var res = {
       team_name: this.name,
       team_id: this.identifier,
+      player_distribution: this.player_distribution(),
       players: []
     };
     var self = this;
@@ -370,28 +385,68 @@ class Team {
     return res;
   }
 
-	can_add_player() {
-		return Object.keys(this.players).length < players_allowed_on_team;
+  player_distribution() {
+    var res = {
+      guards: 0,
+      centers: 0,
+      forwards: 0
+    };
+    var self = this;
+    Object.keys(this.players).forEach(function(p) {
+      var pos = self.players[p].position;
+      if (pos === 'G') {
+        res.guards += 1;
+      } else if (pos === 'C') {
+        res.centers += 1;
+      } else if (pos === 'F') {
+        res.forwards += 1;
+      }
+    });
+    return res;
+  }
+
+	player_makes_team_invalid(player) {
+    var number_players_remaining = players_allowed_on_team - Object.keys(this.players).length - 1;
+    if (number_players_remaining < 0) {
+      //console.log("too many players " + this.identifier);
+      return true;
+    }
+    var dist = this.player_distribution();
+    //console.log(dist);
+    var number_guards_remaining = Math.max(number_guards - dist.guards, 0);
+    var number_forwards_remaining = Math.max(number_forwards - dist.forwards, 0);
+    var number_centers_remaining = Math.max(number_centers - dist.centers, 0);
+    if (player.position === 'G' && (number_forwards_remaining + number_centers_remaining) >= number_players_remaining) {
+      return true;
+    }
+    if (player.position === 'C' && (number_forwards_remaining + number_guards_remaining) >= number_players_remaining) {
+      return true;
+    }
+    if (player.position === 'F' && (number_guards_remaining + number_centers_remaining) >= number_players_remaining) {
+      return true;
+    }
+    return false;
 	}
 
 	add_player(level, player) {
 		if (player.identifier in this.players) {
 			throw "identifier already used: " + player.identifier + " for team: " + this.identifier;
 		}
-		if (this.can_add_player() === false) {
-			throw "max number of players has alredy been met for team: " + this.identifier;
+		if (this.player_makes_team_invalid(player)) {
+			throw "player:" + player.identifier + " would make team: " + this.identifier + " invalid";
 		}
 		player.assign_to_team(level, this.identifier);
 		this.players[player.identifier] = player;
 	}
 
 	reset_prediction_players(level) {
-		for (var pid in this.players) {
-      if (this.players.hasOwnProperty(pid)) {
-        var player = this.players[pid];
-        if (player.is_prediction(level)) {
-          delete this.players[player];
-        }
+    var player_ids = Object.keys(this.players);
+		for (var i = 0; i < player_ids.length; i++) {
+      var player_id = player_ids[i];
+      var player = this.players[player_id];
+      if (player.draft.is_prediction(level)) {
+        player.reset_prediction_draft(level);
+        delete this.players[player_id];
       }
 		}
 	}
@@ -445,6 +500,14 @@ var _n_random_numbers = function(n) {
 	return res;
 };
 
+var _just_assign_player = function(level) {
+  if (level < 10) {
+    return false;
+  }
+  var r = Math.random();
+  return r > (1 / level);
+};
+
 class League {
 	constructor() {
 		this.teams = {};
@@ -472,16 +535,23 @@ class League {
     this.playerpool.add_player(player);
   }
 
-  // I had to change this because it was causing errors. I don't really know what it does. . .
-  //__level=assigned
 	add_player_to_team(player_identifier, team_identifier, level) {
 		this.teams[team_identifier].add_player(
 		  level,
 			this.playerpool.get_player(player_identifier));
 	}
 
-	next_pick_for_team(draft_id, level, team_identifier) {
+  reset_predictions(level) {
+    var team_ids = Object.keys(this.teams);
+    for (var i = 0; i < team_ids.length; i++) {
+      this.teams[team_ids[i]].reset_prediction_players(level);
+    }
+  }
+
+	next_pick_for_team(draft_id, l, team_identifier) {
     var self = this;
+    var level = l + 1;
+    var team = this.teams[team_identifier];
     var other_teams = [];
 
     Object.keys(this.teams).forEach(function(t) {
@@ -490,41 +560,42 @@ class League {
 			}
     });
 
-		var top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
+		var top_wins = -1;
 
-    var res_p;
+    var res_p = null;
     var player_ids = Object.keys(this.playerpool.players);
     for (var i = 0; i < player_ids.length; i++) {
       var player_id = player_ids[i];
       var player = this.playerpool.get_player(player_id);
-      if (player.can_draft()) {
-        res_p = player_id;
-        break;
+      //console.log("can draft: " + player.can_draft() + " player: " + JSON.stringify(player.pretty_print()) + " and player makes team: " + team_identifier + " invalid: " + team.player_makes_team_invalid(player))
+      if (player.can_draft() && !(team.player_makes_team_invalid(player))) {
+        if (_just_assign_player(level)) {
+          return player_id;
+        }
+        this.add_player_to_team(player_id, team_identifier, level);
+        this.predict_draft_teams(draft_id + 1, level);
+        var comp_wins = team.wins(other_teams, _n_random_numbers(10));
+        if (top_wins < comp_wins || top_wins === -1 || res_p === null) {
+          top_wins = comp_wins;
+          res_p = player_id;
+        }
+        this.reset_predictions(level);
       }
     }
 
 		return res_p;
 	}
 
-	all_teams_drafted() {
-    var self = this;
-    var team_ids = Object.keys(this.teams);
-    for (var i = 0; i < team_ids.length; i ++) {
-      var team_id = team_ids[i];
-      if (self.teams[team_id].can_add_player()) {
-				return false;
-			}
-    }
-		return true;
-	}
-
 	predict_draft_teams(draft_id, level) {
+    console.log("draft_id: " + draft_id + " level: " + level);
     var draft_rounds = utilities.pickOrder();
     for (var i = (draft_id - 1); i < draft_rounds.length; i++) {
       var draft_round = draft_rounds[i];
       var team_id = draft_round.teamid;
       var player_identifier = this.next_pick_for_team(draft_id, level, team_id);
-      this.add_player_to_team(player_identifier, team_id, level);
+      if (player_identifier) {
+        this.add_player_to_team(player_identifier, team_id, level);
+      }
     }
 	}
 }
