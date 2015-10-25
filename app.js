@@ -252,12 +252,12 @@ class Score {
     */
 	static comp(s1, s2) {
 		var res = 0;
-		for (var key in s1) {
-			if (s1.hasOwnProperty(key)) {
-				if (s1[key] > s2[key]) {
+		for (var key in s1.score_map) {
+			if (s1.hasOwnProperty(key) && key != 'turnovers') {
+				if (s1.score_map[key] > s2.score_map[key]) {
 					res += 1;
 				}
-				if (s1[key] < s2[key]) {
+				if (s1.score_map[key] < s2.score_map[key]) {
 					res -= 1;
 				}
 			}
@@ -320,7 +320,7 @@ class Player {
   }
 
 	can_draft() {
-		return (this.draft === null || this.draft === undefined) && (this.z_score_sum > 0);
+		return (this.draft === null || this.draft === undefined);
 	}
 
 	assign_to_team(level, team_identifier) {
@@ -401,6 +401,15 @@ class PlayerPool {
     for (var i = 0; i < players.length; i++) {
       players[i].rank = i + 1;
     }
+
+    console.log("Players in order of ranking:");
+    var res = [];
+    Object.keys(this.players).forEach(function(p) {
+      if (self.players[p].can_draft()) {
+        res.push(self.players[p].pretty_print());
+      }
+    });
+    console.log(JSON.stringify(res));
   }
 }
 
@@ -538,7 +547,7 @@ var _order_teams = function(teams) {
 };
 
 var _just_assign_player = function(rank, level) {
-  if (rank < 100) {
+  if (rank < 180) {
     return true;
   }
 
@@ -608,7 +617,7 @@ class League {
     for (var i = 0; i < player_ids.length; i++) {
       var player_id = player_ids[i];
       var player = this.playerpool.get_player(player_id);
-      if (player.rank <= 200 && player.can_draft() && !(team.player_makes_team_invalid(player))) {
+      if (player.rank <= 180 && player.can_draft() && !(team.player_makes_team_invalid(player))) {
         if (_just_assign_player(player.rank, level)) {
           return player_id;
         }
