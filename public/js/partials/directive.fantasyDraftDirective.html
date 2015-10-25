@@ -9,17 +9,72 @@
   <button   class="btn btn-primary register-button" ng-click="addManager()" required>Add Manager</button>
 </form>
 --->
-<button   class="btn btn-primary register-button" ng-click="getPredictions()" >get predictions</button>
+<h3>Draft Player</h3>
+<form name="form">
+  <div class="form-group">
+    <input type="number" class="form-control" id="id" ng-model="playerId" placeholder="PlayerId" required>
+  </div>
+  <div class="form-group">
+    <input type="number" class="form-control" id="team_identifier" ng-model="team_identifier" placeholder="Team Identifier">
+  </div>
+  <button   class="btn btn-primary register-button" ng-click="addDraftPick()" required>Add draft pick</button>
+</form>
+<h3>Add Player to db</h3>
+<form class="form-inline" name="playerform">
+  <div class="form-group">
+    <input type="text" class="form-control" id="playerName" ng-model="playerName" placeholder="PlayerName" required>
+  </div>
+  <div class="form-group">
+    <input type="number" class="form-control" id="games" ng-model="games" placeholder="Games">
+  </div>
+  <div class="form-group">
+    <input type="number" class="form-control" id="threepointersmade" ng-model="threepointersmade" placeholder="threepointersmade">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="assists" ng-model="assists" placeholder="assists">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="blocks" ng-model="blocks" placeholder="blocks">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="fieldgoalpercentage" ng-model="fieldgoalpercentage" placeholder="fieldgoalpercentage">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="freethrowpercentage" ng-model="freethrowpercentage" placeholder="freethrowpercentage">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="points" ng-model="points" placeholder="points">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="turnovers" ng-model="turnovers" placeholder="turnovers">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="totalrebounds" ng-model="totalrebounds" placeholder="totalrebounds">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="steals" ng-model="steals" placeholder="steals">
+  </div>
+  <div class="form-group">
+    <input class="form-control" id="position" ng-model="position" placeholder="position">
+  </div>
+  <button   class="btn btn-primary register-button" ng-click="addPlayertoPool()" required>Add to Player Pool</button>
+</form>
+<br>
+<h3> Predictions </h3>
+<button   class="btn btn-primary register-button" ng-click="getPredictions()" >Get Predictions</button>
+<button   class="btn btn-alert register-button" ng-click="clearPredictions()" >Clear Predictions</button>
 <div ng-repeat="team in teams track by $index">
-  {{team.team_name}}
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>drafted_at</th>
-        <th>name</th>
-      </tr>
-    </thead>
-  </table>
-  <predicted-Players players="team.players"></predicted-Players>
+  <div class='well'>
+    {{team.team_name}}   Team ID : {{team.team_id}}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>drafted_at</th>
+          <th>name</th>
+        </tr>
+      </thead>
+    </table>
+    <predicted-Players players="team.players"></predicted-Players>
+  <div>
 </div>

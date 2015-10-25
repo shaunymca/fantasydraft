@@ -25,6 +25,20 @@
           return result;
         });
       };
+      managerService.addPlayertoPool = function(params) {
+        var url;
+        url = '/addPlayer';
+        return $http({
+          method: "POST",
+          url: url,
+          data: $.param(params),
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).success(function(result) {
+          return result;
+        });
+      };
       managerService.getPredictions = function() {
         return $http.get('/predictDraft').success(function(result)
         {

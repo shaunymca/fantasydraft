@@ -67,19 +67,20 @@ exports.getPlayers = function() {
 // Accepts a player object and returns a promise that resolves the player back from the db.
 exports.addPlayer = function(player) {
   return Q.promise(function(resolve) {
+    console.log(parseInt(player.g));
     pg.connect(conString, function(err, client, done) {
       if(err) {
         return console.error('error fetching client from pool', err);
       }
-      client.query('Insert into players (player, games, threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers, totalrebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
-        [player.player, player.games, player.threepointersmade, player.assists, player.blocks, player.fieldgoalpercentage, player.freethrowpercentage, player.points, player.steals, player.turnovers, player.totalrebounds, player.position], function(err, result) {
+      client.query('Insert into players (player, games, threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers, totalrebounds, position) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);',
+        [player.player, parseInt(player.g), parseInt(player.threepointersmade), parseFloat(player.assists), parseFloat(player.blocks), parseFloat(player.fieldgoalpercentage), parseFloat(player.freethrowpercentage), parseFloat(player.points), parseFloat(player.steals), parseFloat(player.turnovers), parseFloat(player.totalrebounds), player.position ], function(err, result) {
         done();
 
         if(err) {
           return console.error('error running query', err);
         }
         //console.log(result.rows);
-        resolve(result.rows[0].id);
+        resolve("success");
         //output: 1
       });
     });
@@ -122,6 +123,31 @@ exports.addTeam = function(team) {
         '  VALUES ($1, $2) RETURNING *') ,
         [team.name, team.draft_pick],
         function(err, result) {
+        done();
+
+        if(err) {
+          return console.error('error running query', err);
+        }
+        //console.log(result.rows);
+        resolve(result.rows[0].id);
+        //output: 1
+      });
+    });
+  });
+};
+
+exports.draftPlayer = function(player) {
+  return Q.promise(function(resolve) {
+    pg.connect(conString, function(err, client, done) {
+      if(err) {
+        return console.error('error fetching client from pool', err);
+      }
+      console.log(player);
+      client.query((
+        ' UPDATE players SET team_identifier = $1, drafted_at = $2 WHERE id = $3 RETURNING *;'),
+        [player.team_identifier, new Date(), Math.floor(player.id)],
+        function(err, result) {
+          console.log(result);
         done();
 
         if(err) {
