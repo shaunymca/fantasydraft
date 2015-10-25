@@ -39,8 +39,8 @@
           return result;
         });
       };
-      managerService.getPredictions = function() {
-        return $http.get('/predictDraft').success(function(result)
+      managerService.getPredictions = function(draft_id) {
+        return $http.get('/predictDraft/' + draft_id).success(function(result)
         {
           console.log('success');
           return result;

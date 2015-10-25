@@ -26,8 +26,8 @@
             });
           };
           $scope.getPredictions = function() {
-            console.log('getPredictions');
-            managerService.getPredictions().success(function(result) {
+            console.log('getPredictions for draft: ' + $scope.draftid);
+            managerService.getPredictions($scope.draftid).success(function(result) {
               $scope.teams = result.teams;
               return $scope.apply;
             });

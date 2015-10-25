@@ -61,6 +61,8 @@
 </form>
 <br>
 <h3> Predictions </h3>
+DraftID:
+<input class="" ng-model="draftid">
 <button   class="btn btn-primary register-button" ng-click="getPredictions()" >Get Predictions</button>
 <button   class="btn btn-alert register-button" ng-click="clearPredictions()" >Clear Predictions</button>
 <div ng-repeat="team in teams track by $index">

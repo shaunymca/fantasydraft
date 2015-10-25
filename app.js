@@ -127,12 +127,12 @@ var init_league = function(teams, players) {
    // TODO I'll rerun the player pick stuff after this so no need to rerun that here.
  });
 
- app.get('/predictDraft', function(req, res) {
+ app.get('/predictDraft/:id', function(req, res) {
    calculations.getPlayers().then(function(players) {
      populatedb.getTeams().then(function(teams){
        try {
          var l = init_league(teams, players);
-         l.predict_draft_teams(req.query.draft_id, 0);
+         l.predict_draft_teams(parseInt(req.params.id), 0);
          res.json(l.pretty_print());
        } catch (err) {
          console.log(err);
