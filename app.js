@@ -48,7 +48,6 @@ var init_league = function(teams, players) {
     var p = new Player(
       db_p.id,
       db_p.games,
-      //totalrebounds, assists, totalrebounds, totalrebounds, points, steals, totalrebounds, totalRebounds, blocks
       new Score(
         db_p.threepointersmade,
         db_p.assists,
@@ -63,10 +62,10 @@ var init_league = function(teams, players) {
       d
     );
 
+    l.add_player(p);
+
     if (db_p.team_identifier) {
       l.add_player_to_team(db_p.id, db_p.team_identifier, 0);
-    } else {
-      l.add_player(p);
     }
   }
 
@@ -121,10 +120,14 @@ var init_league = function(teams, players) {
  app.get('/predictDraft', function(req, res) {
    calculations.getPlayers().then(function(players) {
      populatedb.getTeams().then(function(teams){
-       var l = init_league(teams, players);
-       // TODO: call predict draft
-       // TODO: return team with players and ordering of draft pick
-       res.json(l.pretty_print());
+       try {
+         var l = init_league(teams, players);
+         l.predict_draft_teams(0);
+         res.json(l.pretty_print());
+       } catch (err) {
+         console.log(err);
+         res.status(500).send(err);
+       }
      });
    });
  });
@@ -254,7 +257,7 @@ class Draft {
 	constructor(level, team_identifier, time) {
 		this.level = level;
 		this.team_identifier = team_identifier;
-    at = time;
+    var at = time;
     if (!at) {
       at = new Date();
     }
@@ -285,10 +288,10 @@ class Player {
   }
 
 	can_draft() {
-		return this.draft !== null;
+		return this.draft === null || this.draft === undefined;
 	}
 
-	draft(level, team_identifier) {
+	assign_to_team(level, team_identifier) {
 		if (this.can_draft() === false) {
 			throw "player already drafted: " + this.identifier;
 		}
@@ -366,15 +369,14 @@ class Team {
 		return Object.keys(this.players).length < players_allowed_on_team;
 	}
 
-	// TODO: has own property for every for loop
 	add_player(level, player) {
 		if (player.identifier in this.players) {
-			console.log( "identifier already used: " + player.identifier + " for team: " + this.identifier );
+			throw "identifier already used: " + player.identifier + " for team: " + this.identifier;
 		}
 		if (this.can_add_player() === false) {
 			throw "max number of players has alredy been met for team: " + this.identifier;
 		}
-		player.draft(level, this.identifier);
+		player.assign_to_team(level, this.identifier);
 		this.players[player.identifier] = player;
 	}
 
@@ -442,6 +444,7 @@ class League {
 	constructor() {
 		this.teams = {};
     this.playerpool = new PlayerPool();
+    this.__level = 1;
 	}
 
   pretty_print() {
@@ -466,46 +469,67 @@ class League {
 
   // I had to change this because it was causing errors. I don't really know what it does. . .
   //__level=assigned
-	add_player_to_team(player_identifier, team_identifier, __level) {
+	add_player_to_team(player_identifier, team_identifier, level) {
 		this.teams[team_identifier].add_player(
-			__level,
-			this.player_pool.get_player(player_identifier));
+		  level,
+			this.playerpool.get_player(player_identifier));
 	}
 
 	next_pick_for_team(team_identifier) {
-		var other_teams = [];
-		for (var tid in this.teams) {
-			if (tid != team_identifier) {
-				other_teams.push(this.teams[tid]);
+    var self = this;
+    var other_teams = [];
+
+    Object.keys(this.teams).forEach(function(t) {
+      if (t != team_identifier) {
+				other_teams.push(self.teams[t]);
 			}
-		}
+    });
 
 		var top_wins = this.teams[team_identifier].wins(other_teams, _n_random_numbers(10));
 
-		return pid;
+    var res_p;
+    var player_ids = Object.keys(this.playerpool.players);
+    for (var i = 0; i < player_ids.length; i++) {
+      var player_id = player_ids[i];
+      var player = this.playerpool.get_player(player_id);
+      if (player.can_draft()) {
+        res_p = player_id;
+        break;
+      }
+    }
+
+		return res_p;
 	}
 
 	all_teams_drafted() {
-		for (var t in this.teams) {
-			if (this.teams[t].can_add_player()) {
+    var self = this;
+    var team_ids = Object.keys(this.teams);
+    for (var i = 0; i < team_ids.length; i ++) {
+      var team_id = team_ids[i];
+      if (self.teams[team_id].can_add_player()) {
 				return false;
 			}
-		}
+    }
 		return true;
 	}
 
-	predict_draft_teams() {
+	predict_draft_teams(l) {
+    var level = l;
+    if (level === 0 || level === null || level === undefined) {
+      level = 1;
+    }
+    console.log("predicting at level: " + level);
+
 		if (this.all_teams_drafted()) {
 			return null;
 		}
 
-		var ordered_teams = _order_teams(this.teams);
+    var self = this;
+    Object.keys(this.teams).forEach(function(t) {
+      var player_identifier = self.next_pick_for_team(t);
+      self.add_player_to_team(player_identifier, t, level);
+    });
 
-		for (var team_identifier in ordered_teams) {
-			var player_identifier = this.next_pick_for_team(team_identifier);
-			this.add_player_to_team(player_identifier, team_identifier, prediction);
-		}
-
-		this.predict_draft_teams();
+		return this.predict_draft_teams(level + 1);
 	}
 }
