@@ -142,6 +142,13 @@ var init_league = function(teams, players) {
    });
  });
 
+ app.post('/addDraftPick', function(req, res) {
+   populatedb.draftPlayer(req.body).then(function(player){
+     //TODO DO SOMETHING WITH THE RETURNED PLAYER
+     //
+   });
+ });
+
  app.get('/bower_components/*', function(req, res) {
    res.sendfile(__dirname + req.originalUrl);
  });

@@ -13,7 +13,6 @@
       };
       managerService.addManager = function(params) {
         var url;
-        console.log(params);
         url = '/addteam';
         return $http({
           method: "POST",
@@ -23,6 +22,30 @@
             'Content-type': 'application/x-www-form-urlencoded'
           }
         }).success(function(result) {
+          return result;
+        });
+      };
+      managerService.addPlayertoPool = function(params) {
+        var url;
+        url = '/addPlayer';
+        return $http({
+          method: "POST",
+          url: url,
+          data: $.param(params),
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).success(function(result) {
+          return result;
+        });
+      };
+      managerService.getPredictions = function() {
+        return $http.get('/predictDraft').success(function(result)
+        {
+          console.log('success');
+          return result;
+        }).error(function(result) {
+          console.log('error');
           return result;
         });
       };
