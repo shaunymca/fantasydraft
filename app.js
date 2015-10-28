@@ -252,16 +252,26 @@ class Score {
     */
 	static comp(s1, s2) {
 		var res = 0;
+    //console.log(s1);
 		for (var key in s1.score_map) {
-			if (s1.hasOwnProperty(key) && key != 'turnovers') {
-				if (s1.score_map[key] > s2.score_map[key]) {
-					res += 1;
-				}
-				if (s1.score_map[key] < s2.score_map[key]) {
-					res -= 1;
-				}
+			if (s1.score_map.hasOwnProperty(key)) {
+        if (key == 'turnovers') {
+          if (s1.score_map[key] > s2.score_map[key]) {
+  					res -= 1;
+  				} else if (s1.score_map[key] < s2.score_map[key]) {
+  					res += 1;
+  				}
+        }
+        else {
+          if (s1.score_map[key] > s2.score_map[key]) {
+  					res += 1;
+  				} else if (s1.score_map[key] < s2.score_map[key]) {
+  					res -= 1;
+  				}
+        }
 			}
 		}
+    //console.log(res);
 		return res;
 	}
 
@@ -343,6 +353,7 @@ class Player {
 		if (r <= (this.games_expected_to_play / games_in_season)) {
 			return this.score;
 		}
+    //console.log("notplayed");
 		return Score.blank_score();
 	}
 
@@ -351,7 +362,7 @@ class Player {
     var res = 0;
 		for (var i = 0; i < r_n.length; i++) {
       var r = r_n[i];
-			if (0 < Score.comp(p1.r_score(r), p2.r_score(r))) {
+			if (0 < Score.comp(p1.score, p2.score)) {
 				res += 1;
 			} else {
 				res -= 1;
@@ -397,11 +408,11 @@ class PlayerPool {
     });
 
     players.sort(Player.comp);
-
     for (var i = 0; i < players.length; i++) {
       players[i].rank = i + 1;
+      console.log(players[i].rank + " " + players[i].name + " " + players[i].id);
     }
-
+    //console.log(players);
     console.log("Players in order of ranking:");
     var res = [];
     Object.keys(this.players).forEach(function(p) {
@@ -409,7 +420,8 @@ class PlayerPool {
         res.push(self.players[p].pretty_print());
       }
     });
-    console.log(JSON.stringify(res));
+    //console.log(res);
+    return(res);
   }
 }
 

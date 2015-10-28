@@ -29,6 +29,7 @@
             console.log('getPredictions for draft: ' + $scope.draftid);
             managerService.getPredictions($scope.draftid).success(function(result) {
               $scope.teams = result.teams;
+              console.log(result.teams);
               return $scope.apply;
             });
           };
