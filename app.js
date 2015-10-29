@@ -62,7 +62,16 @@ var init_league = function(teams, players) {
         db_p.points,
         db_p.steals,
         db_p.turnovers,
-        db_p.totalrebounds
+        db_p.totalrebounds,
+        db_p.threepointersmade_zscore,
+        db_p.assists_zscore,
+        db_p.blocks_zscore,
+        db_p.fieldgoalpercentage_zscore,
+        db_p.freethrowpercentage_zscore,
+        db_p.points_zscore,
+        db_p.steals_zscore,
+        db_p.turnovers_zscore,
+        db_p.totalrebounds_zscore
       ),
       d
     );
@@ -213,7 +222,7 @@ var deep_copy = function(obj) {
 };
 
 class Score {
-	constructor(threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers,totalrebounds) {
+	constructor(threepointersmade, assists, blocks, fieldgoalpercentage, freethrowpercentage, points, steals, turnovers,totalrebounds, threepointersmade_zscore, assists_zscore, blocks_zscore, fieldgoalpercentage_zscore, freethrowpercentage_zscore, points_zscore, steals_zscore, turnovers_zscore, totalrebounds_zscore) {
 		this.score_map = {
 			threepointersmade: threepointersmade,
 			assists: assists,
@@ -223,7 +232,16 @@ class Score {
 			points: points,
 			steals: steals,
 			turnovers: turnovers,
-			totalrebounds: totalrebounds
+			totalrebounds: totalrebounds,
+      threepointersmade_zscore: threepointersmade_zscore,
+			assists_zscore: assists_zscore,
+      blocks_zscore: blocks_zscore,
+			fieldgoalpercentage_zscore: fieldgoalpercentage_zscore,
+			freethrowpercentage_zscore: freethrowpercentage_zscore,
+			points_zscore: points_zscore,
+			steals_zscore: steals_zscore,
+			turnovers_zscore: turnovers_zscore,
+			totalrebounds_zscore: totalrebounds_zscore
 		};
 	}
 
@@ -242,7 +260,16 @@ class Score {
 			s1.score_map.points + s2.score_map.points,
 			s1.score_map.steals + s2.score_map.steals,
 			s1.score_map.turnovers + s2.score_map.turnovers,
-			s1.score_map.totalrebounds + s2.score_map.totalrebounds
+			s1.score_map.totalrebounds + s2.score_map.totalrebounds,
+      s1.score_map.threepointersmade_zscore + s2.score_map.threepointersmade_zscore,
+			s1.score_map.assists_zscore + s2.score_map.assists_zscore,
+      s1.score_map.blocks_zscore + s2.score_map.blocks_zscore,
+			s1.score_map.fieldgoalpercentage_zscore + s2.score_map.fieldgoalpercentage_zscore,
+			s1.score_map.freethrowpercentage_zscore + s2.score_map.freethrowpercentage_zscore,
+			s1.score_map.points_zscore + s2.score_map.points_zscore,
+			s1.score_map.steals_zscore + s2.score_map.steals_zscore,
+			s1.score_map.turnovers_zscore + s2.score_map.turnovers_zscore,
+			s1.score_map.totalrebounds_zscore + s2.score_map.totalrebounds_zscore
 			);
 	}
 

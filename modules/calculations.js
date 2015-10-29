@@ -51,7 +51,7 @@ function distributionofPlayers() {
       //  console.log(statkey + ' start ' + (player[stats[statkey]] - mean));
       //  console.log(statkey + ' zscore ' + ((player[stats[statkey]] - mean) / standardDev));
       //}
-      player.zscores[stats[statkey]] = ((player[stats[statkey]] - mean) / standardDev);
+      player[stats[statkey] + '_zscore'] = ((player[stats[statkey]] - mean) / standardDev);
       //console.log((player[stats[statkey]] - mean) / standardDev);
     });
   });
@@ -66,6 +66,7 @@ function distributionofPlayers() {
       player.averagez = average(zarray);
     }
   });
+  console.log(players[0]);
   return players;
   //players.forEach(function (player) {
   //  console.log(player.playername + ',' + player.sumzscores + ',' + player.averagez);

@@ -11,11 +11,13 @@
 --->
 <h3>Draft Player</h3>
 <form name="form">
-  <div class="form-group">
-    <input type="number" class="form-control" id="id" ng-model="playerId" placeholder="PlayerId" required>
-  </div>
-  <div class="form-group">
-    <input type="number" class="form-control" id="team_identifier" ng-model="team_identifier" placeholder="Team Identifier">
+  <div class="form-inline">
+    <select ng-model="inputDatabase" class="form-control" id="id" ng-model="playerId">
+			<option ng-repeat="player in leagues.players" value="{{player.player_id}}">{{player.name}}</option>
+		</select>
+    <select class="form-control" id="team_identifier" ng-model="team_identifier">
+			<option ng-repeat="team in leagues.teams" value="{{team.team_id}}">{{team.team_name}}</option>
+		</select>
   </div>
   <button   class="btn btn-primary register-button" ng-click="addDraftPick()" required>Add draft pick</button>
 </form>

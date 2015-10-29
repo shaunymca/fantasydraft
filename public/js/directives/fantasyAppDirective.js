@@ -8,7 +8,7 @@
         controller: [
           "$scope", "managerService", function($scope, managerService) {
           managerService.leagues().success(function(result) {
-              $scope.leagues = result.players;
+              $scope.leagues = result;
               return $scope.apply;
           });
           $scope.addManager = function() {
